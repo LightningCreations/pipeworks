@@ -19,7 +19,7 @@ jobs:
         with:
           args: install llvm ninja ccache
       - name: Get Clang
-        shell: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
+        run: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
