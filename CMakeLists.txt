@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 project(pipeworks VERSION 0.1.0 LANGUAGES CXX)
 
+
+include(GNUInstallDirs)
+
 add_library(pipeworks src/engine.cpp src/engine-p.hpp src/renderer.cpp include/engine.hpp)
+
 target_include_directories(pipeworks
   PUBLIC
     $<INSTALL_INTERFACE:include>
