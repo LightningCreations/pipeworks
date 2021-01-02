@@ -11,6 +11,8 @@ class Scene {
   public:
     Scene();
     uint32_t get_id();
+    void activate();
+    void deactivate();
 };
 
 }

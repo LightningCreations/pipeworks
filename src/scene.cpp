@@ -12,4 +12,8 @@ uint32_t Scene::get_id() {
     return id; // Thread safety later
 }
 
+void Scene::activate() {}
+
+void Scene::deactivate() {}
+
 }
