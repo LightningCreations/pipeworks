@@ -17,7 +17,7 @@ target_include_directories(pipeworks
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-target_compile_features(pipeworks PRIVATE cxx_std_14)
+target_compile_features(pipeworks PRIVATE cxx_std_17)
 
 if(PIPEWORKS_BUILD_SDLRENDERER)
   add_library(pipeworks-sdlrenderer src/sdlrenderer/sdlrenderer.cpp include/sdlrenderer/sdlrenderer.hpp)
