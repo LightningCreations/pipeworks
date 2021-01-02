@@ -13,7 +13,8 @@ int main() {
     Engine engine{std::move(renderer)};
 
     Scene title_scene{};
-    engine.activate_scene(title_scene);
+    // TODO: Set up scene
+    engine.set_init_scene(std::make_unique<Scene>(title_scene));
 
-    engine.deactivate_scene(title_scene);
+    engine.start();
 }

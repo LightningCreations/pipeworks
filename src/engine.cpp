@@ -19,4 +19,13 @@ void Engine::deactivate_scene(Scene &scene) {
     }
 }
 
+void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
+    init_scene = std::move(scene);
+}
+
+void Engine::start() {
+    // TODO: Start engine thread
+    running = true;
+}
+
 }
