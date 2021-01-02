@@ -20,21 +20,6 @@ jobs:
           args: install llvm ninja ccache
       - name: Get Clang
         run: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
-      - name: Prepare ccache timestamp
-        id: ccache_cache_timestamp
-        shell: cmake -P {0}
-        run: |
-          string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
-          message("::set-output name=timestamp::${current_date}")
-
-      - name: ccache cache files
-        uses: actions/cache@v1.1.0
-        with:
-          path: ${{github.workspace}}/.ccache
-          key: ${{matrix.config.name}}-ccache-windows-${{steps.ccache_cache_timestamp.outputs.timestamp}}
-          restore-keys: |
-            ${{matrix.config.name}}-ccache-windows-
-
       - name: Clang Build
         uses: LightningCreations/action-cmake-build@v1.2
         with:
@@ -44,4 +29,4 @@ jobs:
           parallel: 8
           build-dir: ${{github.workspace}}/build-windows
           build-type: Release
-          configure-options: -GNinja -DLLVM_CCACHE_BUILD=ON -DLLVM_CCACHE_DIR=${{github.workspace}}/.ccache -DLLVM_APPEND_VC_REV=OFF -DLLVM_PARALLEL_LINK_JOBS=2
+          configure-options: -GNinja
