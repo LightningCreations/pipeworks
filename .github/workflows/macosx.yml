@@ -15,7 +15,7 @@ jobs:
         with:
           submodules: true
       - name: Install packages
-        run: brew install ninja ccache
+        run: brew install ninja
       - name: Clang Build
         uses: LightningCreations/action-cmake-build@v1.2
         with:
