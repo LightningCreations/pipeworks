@@ -9,7 +9,7 @@ if(PIPEWORKS_BUILD_DEMO AND NOT PIPEWORKS_BUILD_SDLRENDERER)
   message(FATAL_ERROR "Building the demo requires the SDL2 renderer; please check your configuration!")
 endif()
 
-add_library(pipeworks src/engine.cpp src/engine-p.hpp src/renderer.cpp include/engine.hpp include/renderer.hpp)
+add_library(pipeworks src/engine.cpp src/engine-p.hpp src/renderer.cpp src/scene.cpp include/engine.hpp include/renderer.hpp include/scene.hpp)
 target_include_directories(pipeworks
   PUBLIC
     $<INSTALL_INTERFACE:include>
