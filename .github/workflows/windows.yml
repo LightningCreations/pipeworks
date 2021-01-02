@@ -18,8 +18,6 @@ jobs:
         uses: crazy-max/ghaction-chocolatey@v1
         with:
           args: install llvm ninja ccache
-      - name: Get clang
-        run: echo "::add-path::C:\msys64\mingw64\bin"
       - name: Prepare ccache timestamp
         id: ccache_cache_timestamp
         shell: cmake -P {0}
