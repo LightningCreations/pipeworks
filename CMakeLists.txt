@@ -20,14 +20,17 @@ target_include_directories(pipeworks
 target_compile_features(pipeworks PRIVATE cxx_std_17)
 
 if(PIPEWORKS_BUILD_SDLRENDERER)
+  find_package(SDL2 REQUIRED)
   add_library(pipeworks-sdlrenderer src/sdlrenderer/sdlrenderer.cpp include/sdlrenderer/sdlrenderer.hpp)
-  target_include_directories(pipeworks
+  target_include_directories(pipeworks-sdlrenderer
     PUBLIC
       $<INSTALL_INTERFACE:include/sdlrenderer>
       $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/sdlrenderer>
     PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src/sdlrenderer
+      ${SDL2_INCLUDE_DIRS}
   )
+  target_link_libraries(pipeworks-sdlrenderer PRIVATE ${SDL2_LIBRARIES} SDL2::SDL2) # Support both legacy and modern CMake config files
 endif()
 
 add_subdirectory(bindings)
