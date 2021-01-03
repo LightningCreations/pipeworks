@@ -9,13 +9,15 @@ namespace pipeworks {
 
 class SDLRenderer : public Renderer {
   private:
-    SDL_Window *window;
+    SDL_Window *m_window;
+    bool m_is_close_requested;
   public:
     SDLRenderer();
     ~SDLRenderer();
     void open_window();
     void close_window();
     bool is_close_requested();
+    void render_poll();
 };
 
 }

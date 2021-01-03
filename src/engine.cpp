@@ -13,6 +13,7 @@ void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
 void Engine::start0() {
     renderer->open_window();
     while(running) {
+        renderer->render_poll();
         if(renderer->is_close_requested()) running = false;
         // FIXME: BUSY LOOP
     }

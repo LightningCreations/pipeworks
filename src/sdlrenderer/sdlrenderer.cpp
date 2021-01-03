@@ -37,16 +37,23 @@ SDLRenderer::~SDLRenderer() {
 }
 
 void SDLRenderer::open_window() {
-    window = SDL_CreateWindow("Pipeworks Engine " PW_VERSION, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, 0);
+    m_window = SDL_CreateWindow("Pipeworks Engine " PW_VERSION, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, 0);
 }
 
 void SDLRenderer::close_window() {
-    if(window) SDL_DestroyWindow(window);
-    window = nullptr;
+    if(m_window) SDL_DestroyWindow(m_window);
+    m_window = nullptr;
 }
 
 bool SDLRenderer::is_close_requested() {
-    return false; // Temporary
+    return m_is_close_requested;
+}
+
+void SDLRenderer::render_poll() {
+    SDL_Event event;
+    while(SDL_PollEvent(&event)) {
+        if(event.type == SDL_QUIT) m_is_close_requested = true;
+    }
 }
 
 }

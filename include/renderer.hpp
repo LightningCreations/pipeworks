@@ -9,6 +9,7 @@ class Renderer {
     virtual void open_window() = 0;
     virtual void close_window() = 0;
     virtual bool is_close_requested() = 0;
+    virtual void render_poll() = 0; // Render, then poll for next frame
 };
 
 }
