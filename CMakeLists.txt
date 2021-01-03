@@ -17,7 +17,7 @@ target_include_directories(pipeworks
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-target_compile_features(pipeworks PRIVATE cxx_std_17)
+target_compile_features(pipeworks PUBLIC cxx_std_17)
 
 if(PIPEWORKS_BUILD_SDLRENDERER)
   find_package(SDL2 REQUIRED)
