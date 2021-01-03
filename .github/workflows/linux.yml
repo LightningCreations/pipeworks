@@ -15,7 +15,7 @@ jobs:
       with:
         submodules: true 
     - name: Install packages
-      run: sudo apt-get install ninja-build
+      run: sudo apt-get install ninja-build libsdl2-dev
     - name: Clang Build
       uses: LightningCreations/action-cmake-build@v1.2
       with:
@@ -34,7 +34,7 @@ jobs:
       with:
         submodules: true 
     - name: Install packages
-      run: sudo apt-get install ninja-build ccache
+      run: sudo apt-get install ninja-build libsdl2-dev
     - name: GCC Build
       uses: LightningCreations/action-cmake-build@v1.2
       with:
