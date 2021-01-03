@@ -25,7 +25,9 @@ target_compile_options(pipeworks PRIVATE
 
 if(PIPEWORKS_BUILD_SDLRENDERER)
   if(WIN32)
-    set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/SDL2)
+    set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}\3rdparty\SDL2)
+    message(STATUS "Set SDL2_DIR")
+    message(STATUS ${SDL2_DIR})
   endif()
   find_package(SDL2 REQUIRED)
   add_library(pipeworks-sdlrenderer src/sdlrenderer/sdlrenderer.cpp include/sdlrenderer/sdlrenderer.hpp)
