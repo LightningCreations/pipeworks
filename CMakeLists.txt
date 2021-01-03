@@ -18,6 +18,10 @@ target_include_directories(pipeworks
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 target_compile_features(pipeworks PUBLIC cxx_std_17)
+target_compile_options(pipeworks PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wpedantic -pedantic -Werror>
+)
 
 if(PIPEWORKS_BUILD_SDLRENDERER)
   find_package(SDL2 REQUIRED)
