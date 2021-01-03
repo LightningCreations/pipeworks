@@ -8,7 +8,7 @@
 
 using namespace pipeworks;
 
-int main() {
+int main(int argc, char *argv[]) {
     std::unique_ptr<Renderer> renderer{new SDLRenderer()};
     Engine engine{std::move(renderer)};
 
