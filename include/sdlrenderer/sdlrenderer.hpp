@@ -8,6 +8,7 @@ namespace pipeworks {
 class SDLRenderer : public Renderer {
   public:
     SDLRenderer();
+    ~SDLRenderer();
 };
 
 }

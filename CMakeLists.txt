@@ -23,13 +23,26 @@ target_compile_options(pipeworks PRIVATE
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wpedantic -pedantic -Werror>
 )
 
-if(PIPEWORKS_BUILD_SDLRENDERER)
+if(PIPEWORKS_BUILD_SDLRENDERER) # or any other SDL components
   if(WIN32)
     set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/SDL2/win32)
     message(STATUS "Set SDL2_DIR")
     message(STATUS ${SDL2_DIR})
   endif()
   find_package(SDL2 REQUIRED)
+  add_library(pipeworks-sdl src/sdl/sdlmanager.cpp src/sdl/sdlmanager.hpp)
+  target_include_directories(pipeworks-sdl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/sdl)
+  if(DEFINED SDL2_INCLUDE_DIRS)
+    target_include_directories(pipeworks-sdl PRIVATE ${SDL2_INCLUDE_DIRS})
+  endif()
+  if(DEFINED SDL2_LIBRARIES)
+    target_link_libraries(pipeworks-sdl PRIVATE ${SDL2_LIBRARIES})
+  else()
+    target_link_libraries(pipeworks-sdl PRIVATE SDL2::SDL2) # Support both legacy and modern CMake config files
+  endif()
+endif()
+
+if(PIPEWORKS_BUILD_SDLRENDERER)
   add_library(pipeworks-sdlrenderer src/sdlrenderer/sdlrenderer.cpp include/sdlrenderer/sdlrenderer.hpp)
   target_include_directories(pipeworks-sdlrenderer
     PUBLIC
@@ -41,7 +54,12 @@ if(PIPEWORKS_BUILD_SDLRENDERER)
   if(DEFINED SDL2_INCLUDE_DIRS)
     target_include_directories(pipeworks-sdlrenderer PRIVATE ${SDL2_INCLUDE_DIRS})
   endif()
-  target_link_libraries(pipeworks-sdlrenderer PUBLIC pipeworks)
+  target_link_libraries(pipeworks-sdlrenderer
+    PUBLIC
+      pipeworks
+    PRIVATE
+      pipeworks-sdl
+  )
   if(DEFINED SDL2_LIBRARIES)
     target_link_libraries(pipeworks-sdlrenderer PRIVATE ${SDL2_LIBRARIES})
   else()
