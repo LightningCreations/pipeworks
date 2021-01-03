@@ -30,7 +30,12 @@ if(PIPEWORKS_BUILD_SDLRENDERER)
       ${CMAKE_CURRENT_SOURCE_DIR}/src/sdlrenderer
       ${SDL2_INCLUDE_DIRS}
   )
-  target_link_libraries(pipeworks-sdlrenderer PRIVATE ${SDL2_LIBRARIES} SDL2::SDL2) # Support both legacy and modern CMake config files
+  target_link_libraries(pipeworks-sdlrenderer
+    PUBLIC
+      pipeworks
+    PRIVATE
+      ${SDL2_LIBRARIES} SDL2::SDL2 # Support both legacy and modern CMake config files
+  )
 endif()
 
 add_subdirectory(bindings)
