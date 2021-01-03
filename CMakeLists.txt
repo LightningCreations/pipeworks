@@ -61,9 +61,9 @@ if(PIPEWORKS_BUILD_SDLRENDERER)
       pipeworks-sdl
   )
   if(DEFINED SDL2_LIBRARIES)
-    target_link_libraries(pipeworks-sdlrenderer PRIVATE ${SDL2_LIBRARIES})
+    target_link_libraries(pipeworks-sdlrenderer PUBLIC ${SDL2_LIBRARIES})
   else()
-    target_link_libraries(pipeworks-sdlrenderer PRIVATE SDL2::SDL2) # Support both legacy and modern CMake config files
+    target_link_libraries(pipeworks-sdlrenderer PUBLIC SDL2::SDL2) # Support both legacy and modern CMake config files
   endif()
 endif()
 

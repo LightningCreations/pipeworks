@@ -1,5 +1,6 @@
 #include <sdlrenderer.hpp>
 
+#include <engine.hpp>
 #include <sdlmanager.hpp>
 
 #include <SDL.h>
@@ -33,6 +34,19 @@ SDLRenderer::SDLRenderer() {
 
 SDLRenderer::~SDLRenderer() {
     render_manager.verify_active(); // Make sure the manager doesn't get destructed too soon (it shouldn't, I'm being paranoid)
+}
+
+void SDLRenderer::open_window() {
+    window = SDL_CreateWindow("Pipeworks Engine " PW_VERSION, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, 0);
+}
+
+void SDLRenderer::close_window() {
+    if(window) SDL_DestroyWindow(window);
+    window = nullptr;
+}
+
+bool SDLRenderer::is_close_requested() {
+    return false; // Temporary
 }
 
 }

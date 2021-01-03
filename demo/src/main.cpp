@@ -17,4 +17,5 @@ int main() {
     engine.set_init_scene(std::make_unique<Scene>(title_scene));
 
     engine.start();
+    engine.join(); // Wait for stop
 }

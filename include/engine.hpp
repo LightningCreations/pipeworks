@@ -1,10 +1,14 @@
 #ifndef PW_ENGINE_HPP
 #define PW_ENGINE_HPP
 
-#include <memory>
-#include <vector>
 #include "scene.hpp"
 #include "renderer.hpp"
+
+#include <memory>
+#include <thread>
+#include <vector>
+
+#define PW_VERSION "0.1.0"
 
 namespace pipeworks {
 
@@ -13,16 +17,20 @@ class Engine {
     std::unique_ptr<Renderer> renderer;
     std::vector<Scene> active_scenes;
     std::unique_ptr<Scene> init_scene;
+    std::thread engine_thread;
     bool running; // FIXME: Needs thread safety
+    void start0(); // Start in new thread
   protected:
     void deactivate_scene0(Scene &scene); // Deactivate scene without notification; useful in reactivation
   public:
     Engine(std::unique_ptr<Renderer> renderer);
-    void activate_scene(Scene &scene);
-    void deactivate_scene(Scene &scene);
     void set_init_scene(std::unique_ptr<Scene> scene);
     void start();
     void stop();
+    bool is_running();
+    void join(); // Wait for thread to finish
+    void activate_scene(Scene &scene);
+    void deactivate_scene(Scene &scene);
 };
 
 }
