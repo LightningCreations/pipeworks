@@ -61,7 +61,7 @@ if(PIPEWORKS_BUILD_SDLRENDERER)
       pipeworks-sdl
   )
   if(DEFINED SDL2_LIBRARIES)
-    target_link_libraries(pipeworks-sdlrenderer PUBLIC ${SDL2_LIBRARIES})
+    target_link_libraries(pipeworks-sdlrenderer PUBLIC ${SDL2_LIBRARIES} "-pthread") # Because SDL2 needs pthread and doesn't declare it?
   else()
     target_link_libraries(pipeworks-sdlrenderer PUBLIC SDL2::SDL2) # Support both legacy and modern CMake config files
   endif()
