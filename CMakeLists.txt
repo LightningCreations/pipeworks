@@ -52,7 +52,7 @@ if(PIPEWORKS_BUILD_SDLRENDERER)
       ${CMAKE_CURRENT_SOURCE_DIR}/src/sdlrenderer
   )
   if(DEFINED SDL2_INCLUDE_DIRS)
-    target_include_directories(pipeworks-sdlrenderer PRIVATE ${SDL2_INCLUDE_DIRS})
+    target_include_directories(pipeworks-sdlrenderer PUBLIC ${SDL2_INCLUDE_DIRS})
   endif()
   target_link_libraries(pipeworks-sdlrenderer
     PUBLIC
