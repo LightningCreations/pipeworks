@@ -23,6 +23,8 @@ target_compile_options(pipeworks PRIVATE
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wpedantic -pedantic -Werror>
 )
 
+set_target_properties(pipeworks PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 if(PIPEWORKS_BUILD_SDLRENDERER) # or any other SDL components
   if(WIN32)
     set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/SDL2/win32)
@@ -51,6 +53,8 @@ if(PIPEWORKS_BUILD_SDLRENDERER)
     PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/src/sdlrenderer
   )
+
+  set_target_properties(pipeworks-sdlrenderer PROPERTIES POSITION_INDEPENDENT_CODE ON)
   if(DEFINED SDL2_INCLUDE_DIRS)
     target_include_directories(pipeworks-sdlrenderer PUBLIC ${SDL2_INCLUDE_DIRS})
   endif()

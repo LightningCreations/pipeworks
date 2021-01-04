@@ -6,10 +6,10 @@
  * user guide available at https://docs.gradle.org/4.4.1/userguide/tutorial_java_projects.html
  */
 
-/*
+
 // Apply the java plugin to add support for Java
 plugins {
-  id: 'java-library'
+  id 'java-library'
 }
 
 // In this section you declare where to find the dependencies of your project
@@ -33,4 +33,3 @@ dependencies {
     // 'test.useTestNG()' to your build script.
     testImplementation 'junit:junit:4.12'
 }
-*/
