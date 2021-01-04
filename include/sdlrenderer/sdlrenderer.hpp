@@ -11,6 +11,7 @@ class SDLRenderer : public Renderer {
   private:
     SDL_Window *m_window;
     bool m_is_close_requested;
+    uint32_t next_time;
   public:
     SDLRenderer();
     ~SDLRenderer();
@@ -18,6 +19,7 @@ class SDLRenderer : public Renderer {
     void close_window();
     bool is_close_requested();
     void render_poll();
+    void sync(uint32_t);
 };
 
 }

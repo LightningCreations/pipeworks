@@ -56,4 +56,11 @@ void SDLRenderer::render_poll() {
     }
 }
 
+void SDLRenderer::sync(uint32_t fps) {
+    uint32_t cur_time = SDL_GetTicks();
+    if(cur_time < next_time) SDL_Delay(next_time - cur_time);
+    else next_time = cur_time; // If we're behind, stop being behind
+    next_time += 1000/fps;
+}
+
 }

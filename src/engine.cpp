@@ -15,7 +15,7 @@ void Engine::start0() {
     while(running) {
         renderer->render_poll();
         if(renderer->is_close_requested()) running = false;
-        // FIXME: BUSY LOOP
+        renderer->sync(60); // 60 FPS default
     }
     renderer->close_window();
 }
