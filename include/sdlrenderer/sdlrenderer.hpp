@@ -12,6 +12,7 @@ class SDLRenderer : public Renderer {
     SDL_Window *m_window;
     bool m_is_close_requested;
     uint32_t next_time;
+    std::vector<Scene> active_scenes;
   public:
     SDLRenderer();
     ~SDLRenderer();
@@ -20,6 +21,7 @@ class SDLRenderer : public Renderer {
     bool is_close_requested();
     void render_poll();
     void sync(uint32_t);
+    void set_active_scene_list(std::vector<Scene>);
 };
 
 }

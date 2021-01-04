@@ -63,4 +63,9 @@ void SDLRenderer::sync(uint32_t fps) {
     next_time += 1000/fps;
 }
 
+void SDLRenderer::set_active_scene_list(std::vector<Scene> scenes) {
+    active_scenes = scenes;
+    // No further processing needed
+}
+
 }

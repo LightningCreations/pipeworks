@@ -3,7 +3,7 @@
 namespace pipeworks {
 
 Engine::Engine(std::unique_ptr<Renderer> renderer): renderer(std::move(renderer)) {
-
+    this->renderer->set_active_scene_list(active_scenes);
 }
 
 void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
