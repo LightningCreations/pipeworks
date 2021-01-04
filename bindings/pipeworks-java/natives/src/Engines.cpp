@@ -7,7 +7,7 @@
 
 static_assert(sizeof(std::uintptr_t)<=sizeof(jlong));
 
-JNICALL void Engine_close(JNIEnv* env,jobject o) noexcept {
+void JNICALL Engine_close(JNIEnv* env,jobject o) noexcept {
     jclass cl = env->GetObjectClass(o);
     jfieldID f = env->GetFieldID(cl,"ptr_mengine","J");
     auto i =env->GetLongField(o,f);
@@ -15,7 +15,7 @@ JNICALL void Engine_close(JNIEnv* env,jobject o) noexcept {
     delete e;
 }
 
-JNICALL jlong Engine_init_native(JNIEnv* env,jclass cl,jobject nr)noexcept{
+jlong JNICALL Engine_init_native(JNIEnv* env,jclass cl,jobject nr)noexcept{
     jclass nrc = env->GetObjectClass(nr);
     jfieldID f = env->GetFieldID(cl,"field","J");
     auto i = env->GetLongField(nr,f);
@@ -36,7 +36,7 @@ static const JNINativeMethod methods[] = {
 
 
 extern"C"{
-    JNIEXPORT JNICALL void Java_github_lightningcreations_pipeworks_java_Engine_registerNatives(JNIEnv* env,jclass cl){
+    JNIEXPORT void JNICALL Java_github_lightningcreations_pipeworks_java_Engine_registerNatives(JNIEnv* env,jclass cl){
         env->RegisterNatives(cl, methods, std::size(methods));
     }
 }
