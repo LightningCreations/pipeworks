@@ -1,6 +1,12 @@
 #ifndef PW_ENGINE_HPP
 #define PW_ENGINE_HPP
 
+namespace pipeworks {
+
+class Engine;
+
+}
+
 #include "scene.hpp"
 #include "renderer.hpp"
 

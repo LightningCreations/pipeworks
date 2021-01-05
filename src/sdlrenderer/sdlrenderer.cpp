@@ -50,6 +50,12 @@ bool SDLRenderer::is_close_requested() {
 }
 
 void SDLRenderer::render_poll() {
+    for(Scene scene : active_scenes) {
+        for(GameObject *object : scene.get_objects()) {
+            object->render(*this); // TODO: Add special-casing for common GameObjects
+        }
+    }
+
     SDL_Event event;
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) m_is_close_requested = true;
@@ -66,6 +72,26 @@ void SDLRenderer::sync(uint32_t fps) {
 void SDLRenderer::set_active_scene_list(std::vector<Scene> scenes) {
     active_scenes = scenes;
     // No further processing needed
+}
+
+void SDLRenderer::set_width(uint32_t width) {
+    this->width = width;
+}
+
+void SDLRenderer::set_height(uint32_t height) {
+    this->height = height;
+}
+
+uint32_t SDLRenderer::get_width() {
+    return width;
+}
+
+uint32_t SDLRenderer::get_height() {
+    return height;
+}
+
+void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    // FIXME: Stub
 }
 
 }

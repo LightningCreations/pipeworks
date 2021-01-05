@@ -16,4 +16,9 @@ void Scene::activate() {}
 
 void Scene::deactivate() {}
 
+std::vector<GameObject*> Scene::get_objects() {
+    return objects;
 }
+
+}
+
