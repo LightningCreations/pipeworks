@@ -20,5 +20,9 @@ std::vector<GameObject*> Scene::get_objects() {
     return objects;
 }
 
+void Scene::add_object(GameObject *object) {
+    objects.push_back(object);
+}
+
 }
 

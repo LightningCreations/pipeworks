@@ -24,6 +24,7 @@ class Scene {
     void activate();
     void deactivate();
     std::vector<GameObject*> get_objects();
+    void add_object(GameObject*);
 };
 
 }

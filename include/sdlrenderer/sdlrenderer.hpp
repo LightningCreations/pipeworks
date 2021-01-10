@@ -4,14 +4,18 @@
 #include "../renderer.hpp"
 
 #include <SDL.h>
+#include <memory>
 
 namespace pipeworks {
 
 class SDLRenderer : public Renderer {
   private:
-    SDL_Window *m_window;
-    bool m_is_close_requested;
-    uint32_t next_time;
+    SDL_Window *m_window = nullptr;
+    SDL_Renderer *m_renderer = nullptr;
+    SDL_Texture *m_texture = nullptr;
+    uint8_t *m_pixels = nullptr;
+    bool m_is_close_requested = false;
+    uint32_t next_time = 0;
     std::vector<Scene> active_scenes;
     uint32_t width;
     uint32_t height;

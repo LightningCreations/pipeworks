@@ -37,10 +37,20 @@ SDLRenderer::~SDLRenderer() {
 }
 
 void SDLRenderer::open_window() {
+    close_window(); // Just in case
     m_window = SDL_CreateWindow("Pipeworks Engine " PW_VERSION, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, 0);
+    m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 1280, 720);
+    m_pixels = new uint8_t[1280*720*4]; // Sorry about the new
 }
 
 void SDLRenderer::close_window() {
+    if(m_pixels) delete[] m_pixels;
+    m_pixels = nullptr;
+    if(m_texture) SDL_DestroyTexture(m_texture);
+    m_texture = nullptr;
+    if(m_renderer) SDL_DestroyRenderer(m_renderer);
+    m_renderer = nullptr;
     if(m_window) SDL_DestroyWindow(m_window);
     m_window = nullptr;
 }
@@ -55,6 +65,10 @@ void SDLRenderer::render_poll() {
             object->render(*this); // TODO: Add special-casing for common GameObjects
         }
     }
+
+    SDL_UpdateTexture(m_texture, NULL, &*m_pixels, 1280*4);
+    SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
+    SDL_RenderPresent(m_renderer); // Also syncs SDL-side
 
     SDL_Event event;
     while(SDL_PollEvent(&event)) {
