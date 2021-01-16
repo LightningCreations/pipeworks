@@ -19,6 +19,7 @@ class SDLRenderer : public Renderer {
     std::vector<Scene> *active_scenes;
     uint32_t width;
     uint32_t height;
+    float xoa;
   public:
     SDLRenderer();
     ~SDLRenderer();

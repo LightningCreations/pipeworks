@@ -92,10 +92,12 @@ void SDLRenderer::set_active_scene_list(std::vector<Scene> *scenes) {
 
 void SDLRenderer::set_width(uint32_t width) {
     this->width = width;
+    xoa = ((float) width) / this->height; // Offset amount to stay centered
 }
 
 void SDLRenderer::set_height(uint32_t height) {
     this->height = height;
+    xoa = ((float) this->width) / height; // Offset amount to stay centered
 }
 
 uint32_t SDLRenderer::get_width() {
@@ -107,18 +109,12 @@ uint32_t SDLRenderer::get_height() {
 }
 
 void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    assert(width >= 0 && height >= 0 && "Please don't send me a negative width/height for a rectangle, that's just not kind");
-    // Now, before you read the actual function, something to clear up:
-    // Someone is going to say "Why didn't he cast before dividing by 2, since it'll be the same answer anyway?"
-    // As a matter of fact,
-    // INTEGER DIVISION IS SLOWER THAN FLOATING POINT DIVISION (which surprised me at first)
-    // As such, whenever I'm doing float -> int conversions, I will try to do casting as the very last step more in the interest of speed than anything else.
-    // Now, onto the code.
-    // - Ray, original author of Pipeworks SDL Rendering Engine
-    uint32_t nx = (uint32_t) ((x + 1) * this->width / 2); if(nx >= this->width) return;   // This can't possibly be a thread-safety issue, right?
-    uint32_t ny = (uint32_t) ((y + 1) * this->height / 2); if(ny >= this->height) return; // ... right?
-    uint32_t nw = (uint32_t) (width * this->width / 2);                             // I'm just going to hope it isn't...
-    uint32_t nh = (uint32_t) (height * this->height / 2);                           // ... since otherwise I need to spend function calls.
+    assert(width >= 0 && height >= 0 && "Please don't send me negative width/height for a rectangle, that's just not kind");
+    // We're multiplying by height to not stretch the image. I'll try to write a thorough explanation later
+    uint32_t nx = (uint32_t) ((x + xoa) * this->height) / 2; if(nx >= this->width) return; // This can't possibly be a thread-safety issue, right?
+    uint32_t ny = (uint32_t) ((y + 1) * this->height) / 2; if(ny >= this->height) return;  // ... right?
+    uint32_t nw = (uint32_t) (width * this->height) / 2;                                   // I'm just going to hope it isn't...
+    uint32_t nh = (uint32_t) (height * this->height) / 2;                                  // ... since otherwise I need to spend function calls.
     // n{x,y,w,h} = normalized {x,y,width,height} on a scale of 0 to {width,height}-1
 
     // And now, for correction factors in case somebody decided to pass me out-of-bounds coordinates.
