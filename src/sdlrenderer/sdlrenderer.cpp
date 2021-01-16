@@ -3,6 +3,7 @@
 #include <engine.hpp>
 #include <sdlmanager.hpp>
 
+#include <cassert>
 #include <SDL.h>
 
 namespace pipeworks {
@@ -28,7 +29,8 @@ void SDLRenderManager::verify_active() {
 
 static SDLRenderManager render_manager;
 
-SDLRenderer::SDLRenderer() {
+static std::vector<Scene> engine_hasnt_passed_active_scenes_list_ub_prevention;
+SDLRenderer::SDLRenderer(): active_scenes(&engine_hasnt_passed_active_scenes_list_ub_prevention) {
     render_manager.verify_active(); // Initialize video if it isn't initialized already
 }
 
@@ -60,7 +62,7 @@ bool SDLRenderer::is_close_requested() {
 }
 
 void SDLRenderer::render_poll() {
-    for(Scene scene : active_scenes) {
+    for(Scene scene : *active_scenes) {
         for(GameObject *object : scene.get_objects()) {
             object->render(*this); // TODO: Add special-casing for common GameObjects
         }
@@ -83,7 +85,7 @@ void SDLRenderer::sync(uint32_t fps) {
     next_time += 1000/fps;
 }
 
-void SDLRenderer::set_active_scene_list(std::vector<Scene> scenes) {
+void SDLRenderer::set_active_scene_list(std::vector<Scene> *scenes) {
     active_scenes = scenes;
     // No further processing needed
 }
@@ -105,7 +107,37 @@ uint32_t SDLRenderer::get_height() {
 }
 
 void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
-    // FIXME: Stub
+    assert(width >= 0 && height >= 0 && "Please don't send me a negative width/height for a rectangle, that's just not kind");
+    // Now, before you read the actual function, something to clear up:
+    // Someone is going to say "Why didn't he cast before dividing by 2, since it'll be the same answer anyway?"
+    // As a matter of fact,
+    // INTEGER DIVISION IS SLOWER THAN FLOATING POINT DIVISION (which surprised me at first)
+    // As such, whenever I'm doing float -> int conversions, I will try to do casting as the very last step more in the interest of speed than anything else.
+    // Now, onto the code.
+    // - Ray, original author of Pipeworks SDL Rendering Engine
+    uint32_t nx = (uint32_t) ((x + 1) * this->width / 2); if(nx >= this->width) return;   // This can't possibly be a thread-safety issue, right?
+    uint32_t ny = (uint32_t) ((y + 1) * this->height / 2); if(ny >= this->height) return; // ... right?
+    uint32_t nw = (uint32_t) (width * this->width / 2);                             // I'm just going to hope it isn't...
+    uint32_t nh = (uint32_t) (height * this->height / 2);                           // ... since otherwise I need to spend function calls.
+    // n{x,y,w,h} = normalized {x,y,width,height} on a scale of 0 to {width,height}-1
+
+    // And now, for correction factors in case somebody decided to pass me out-of-bounds coordinates.
+    if(nx < 0) { nw += nx; nx = 0; }                 // If we're off the   left  side, cut the width
+    if(ny < 0) { nh += ny; ny = 0; }                 //        "           top         "       height
+    if(nx+nw > this->width)  nw = this->width  - nx; //        "          right        "       width
+    if(ny+nh > this->height) nh = this->height - nh; //        "          bottom       "       height
+
+    if(a < 128) return; // Temporary fix for not having alpha blending
+
+    for(uint32_t curx = nx; curx < (nx+nw) || curx == nx; curx++) { // More questionable decisions to explain!
+        // Basically, I just want a simple way to always render at least one pixel.
+        // I trust the optimizer to essentially make this a do-for loop, which would solve the problem entirely.
+        for(uint32_t cury = ny; cury < (ny+nh) || cury == ny; cury++) { // BTW, the reason I'm using cur{x,y} instead of offsets is again for optimization.
+            m_pixels[(curx+cury*this->width)*4  ] = r; // This way, the compiler only has to
+            m_pixels[(curx+cury*this->width)*4+1] = g; // evaluate n{x,y}+n{w,h} once instead of
+            m_pixels[(curx+cury*this->width)*4+2] = b; // evaluating off{x,y}+n{x,y} every iteration.
+        }
+    }
 }
 
 }

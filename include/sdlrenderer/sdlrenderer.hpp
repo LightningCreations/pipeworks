@@ -16,13 +16,13 @@ class SDLRenderer : public Renderer {
     uint8_t *m_pixels = nullptr;
     bool m_is_close_requested = false;
     uint32_t next_time = 0;
-    std::vector<Scene> active_scenes;
+    std::vector<Scene> *active_scenes;
     uint32_t width;
     uint32_t height;
   public:
     SDLRenderer();
     ~SDLRenderer();
-    void set_active_scene_list(std::vector<Scene>);
+    void set_active_scene_list(std::vector<Scene>*);
     void set_width(uint32_t);
     void set_height(uint32_t);
     void open_window();

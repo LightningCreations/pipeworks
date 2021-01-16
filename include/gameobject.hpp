@@ -14,7 +14,7 @@ namespace pipeworks {
 class GameObject {
   public:
     virtual ~GameObject() = 0;
-    virtual void render(const Renderer &renderer) = 0;
+    virtual void render(Renderer &renderer) = 0;
 };
 
 }

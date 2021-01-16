@@ -3,7 +3,9 @@
 namespace pipeworks {
 
 Engine::Engine(std::unique_ptr<Renderer> renderer): renderer(std::move(renderer)) {
-    this->renderer->set_active_scene_list(active_scenes);
+    this->renderer->set_active_scene_list(&active_scenes);
+    this->renderer->set_width(1280);
+    this->renderer->set_height(720);
 }
 
 void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
@@ -21,6 +23,7 @@ void Engine::start0() {
 }
 
 void Engine::start() {
+    activate_scene(*init_scene);
     engine_thread = std::thread(&Engine::start0, this);
     running = true;
 }

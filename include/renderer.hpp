@@ -17,7 +17,7 @@ namespace pipeworks {
 class Renderer {
   public:
     virtual ~Renderer() = 0;
-    virtual void set_active_scene_list(std::vector<Scene>) = 0;
+    virtual void set_active_scene_list(std::vector<Scene>*) = 0;
     virtual void set_width(uint32_t) = 0;
     virtual void set_height(uint32_t) = 0;
     virtual void open_window() = 0;
