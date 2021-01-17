@@ -1,6 +1,9 @@
 project(fotc CXX)
 
-add_executable(fotc src/main.cpp)
+add_executable(fotc
+    src/main.cpp
+    src/starfieldbackground.cpp src/starfieldbackground.hpp
+)
 
 target_compile_features(fotc PUBLIC cxx_std_11)
 target_link_libraries(fotc pipeworks pipeworks-sdlrenderer)

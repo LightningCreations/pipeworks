@@ -7,7 +7,9 @@ Background::Background(float x, float y, float z): x(x), y(y) {
 }
 
 void Background::render(Renderer &renderer) {
-    renderer.fill_rect(x, y, 1, 1, 127, 195, 255, 255); // Horrible background, for sake of example
+    (void) x;
+    (void) y;
+    // I'll implement this properly once I have something for it.
 }
 
 } // namespace pipeworks

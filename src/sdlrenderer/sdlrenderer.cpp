@@ -129,9 +129,9 @@ void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t
         // Basically, I just want a simple way to always render at least one pixel.
         // I trust the optimizer to essentially make this a do-for loop, which would solve the problem entirely.
         for(uint32_t cury = ny; cury < (ny+nh) || cury == ny; cury++) { // BTW, the reason I'm using cur{x,y} instead of offsets is again for optimization.
-            m_pixels[(curx+cury*this->width)*4  ] = r; // This way, the compiler only has to
-            m_pixels[(curx+cury*this->width)*4+1] = g; // evaluate n{x,y}+n{w,h} once instead of
-            m_pixels[(curx+cury*this->width)*4+2] = b; // evaluating off{x,y}+n{x,y} every iteration.
+            m_pixels[(curx+cury*this->width)*4+1] = b; // This way, the compiler only has to
+            m_pixels[(curx+cury*this->width)*4+2] = g; // evaluate n{x,y}+n{w,h} once instead of
+            m_pixels[(curx+cury*this->width)*4+3] = r; // evaluating off{x,y}+n{x,y} every iteration.
         }
     }
 }
