@@ -111,24 +111,23 @@ uint32_t SDLRenderer::get_height() {
 void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     assert(width >= 0 && height >= 0 && "Please don't send me negative width/height for a rectangle, that's just not kind");
     // We're multiplying by height to not stretch the image. I'll try to write a thorough explanation later
-    uint32_t nx = (uint32_t) ((x + xoa) * this->height) / 2; if(nx >= this->width) return; // This can't possibly be a thread-safety issue, right?
-    uint32_t ny = (uint32_t) ((y + 1) * this->height) / 2; if(ny >= this->height) return;  // ... right?
-    uint32_t nw = (uint32_t) (width * this->height) / 2;                                   // I'm just going to hope it isn't...
-    uint32_t nh = (uint32_t) (height * this->height) / 2;                                  // ... since otherwise I need to spend function calls.
-    // n{x,y,w,h} = normalized {x,y,width,height} on a scale of 0 to {width,height}-1
+    int32_t nx = static_cast<int32_t>(((x + xoa) * this->height)) / 2; if(nx >= static_cast<int32_t>(this->width)) return; // This can't possibly be a thread-safety issue, right?
+    int32_t ny = static_cast<int32_t>(((y + 1) * this->height)) / 2; if(ny >= static_cast<int32_t>(this->height)) return;  // ... right?
+    int32_t nw = static_cast<int32_t>((width * this->height)) / 2;                                                         // I'm just going to hope it isn't...
+    int32_t nh = static_cast<int32_t>((height * this->height)) / 2;                                                        // ... since otherwise I need to spend function calls.
 
     // And now, for correction factors in case somebody decided to pass me out-of-bounds coordinates.
-    if(nx < 0) { nw += nx; nx = 0; }                 // If we're off the   left  side, cut the width
-    if(ny < 0) { nh += ny; ny = 0; }                 //        "           top         "       height
-    if(nx+nw > this->width)  nw = this->width  - nx; //        "          right        "       width
-    if(ny+nh > this->height) nh = this->height - nh; //        "          bottom       "       height
+    if(nx < 0) { nw += nx; nx = 0; }                                       // If we're off the   left  side, cut the width
+    if(ny < 0) { nh += ny; ny = 0; }                                       //        "           top         "       height
+    if(nx+nw > static_cast<int32_t>(this->width))  nw = this->width  - nx; //        "          right        "       width
+    if(ny+nh > static_cast<int32_t>(this->height)) nh = this->height - ny; //        "          bottom       "       height
 
     if(a < 128) return; // Temporary fix for not having alpha blending
 
-    for(uint32_t curx = nx; curx < (nx+nw) || curx == nx; curx++) { // More questionable decisions to explain!
+    for(int32_t curx = nx; curx < (nx+nw) || curx == nx; curx++) { // More questionable decisions to explain!
         // Basically, I just want a simple way to always render at least one pixel.
         // I trust the optimizer to essentially make this a do-for loop, which would solve the problem entirely.
-        for(uint32_t cury = ny; cury < (ny+nh) || cury == ny; cury++) { // BTW, the reason I'm using cur{x,y} instead of offsets is again for optimization.
+        for(int32_t cury = ny; cury < (ny+nh) || cury == ny; cury++) { // BTW, the reason I'm using cur{x,y} instead of offsets is again for optimization.
             m_pixels[(curx+cury*this->width)*4+1] = b; // This way, the compiler only has to
             m_pixels[(curx+cury*this->width)*4+2] = g; // evaluate n{x,y}+n{w,h} once instead of
             m_pixels[(curx+cury*this->width)*4+3] = r; // evaluating off{x,y}+n{x,y} every iteration.
