@@ -1,6 +1,4 @@
 
-include(FindJNI)
-
 
 add_library(pipeworks-jni MODULE src/Engines.cpp)
 

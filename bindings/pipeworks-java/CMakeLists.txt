@@ -1,2 +1,10 @@
 
-add_subdirectory(natives)
+message(CHECK_START "Searching for JNI Headers")
+include(FindJNI)
+if(JNI_FOUND)
+    message(CHECK_PASS "${JAVA_INCLUDE_PATH}")
+    add_subdirectory(natives)
+else()
+    message(CHECK_FAIL "Not Found")
+    message(WARNING "Java Binding is enabled, but JNI Headers could not be found")
+endif()
