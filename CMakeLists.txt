@@ -14,8 +14,10 @@ add_library(pipeworks
   src/gameobject.cpp include/gameobject.hpp
   src/renderer.cpp include/renderer.hpp
   src/scene.cpp include/scene.hpp
+  src/resourcemanager.cpp include/resourcemanager.hpp
 
   src/objects/background.cpp include/objects/background.hpp
+  src/objects/sprite.cpp include/objects/sprite.hpp
 )
 target_include_directories(pipeworks
   PUBLIC
@@ -24,7 +26,7 @@ target_include_directories(pipeworks
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-target_compile_features(pipeworks PUBLIC cxx_std_17)
+target_compile_features(pipeworks PUBLIC cxx_std_20)
 target_compile_options(pipeworks PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wpedantic -pedantic -Werror>

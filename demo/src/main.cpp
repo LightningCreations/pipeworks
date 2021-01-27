@@ -3,6 +3,7 @@
 #include <engine.hpp>
 #include <renderer.hpp>
 #include <scene.hpp>
+#include <objects/sprite.hpp>
 
 #include "starfieldbackground.hpp"
 
@@ -17,6 +18,7 @@ int main(int argc, char *argv[]) {
 
     Scene title_scene{};
     title_scene.add_object(new StarfieldBackground(0, 0, 100000)); // farthest back
+    title_scene.add_object(new Sprite(0, 0, 1, 0.1f, 0.1f, std::vector<std::string>{std::string("ship1.png")})); // C++ boilerplate.
     engine.set_init_scene(std::make_unique<Scene>(title_scene));
 
     engine.start();

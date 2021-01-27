@@ -41,9 +41,19 @@ bool Engine::is_running() {
 }
 
 void Engine::activate_scene(Scene &scene) {
-    deactivate_scene0(scene); // Deactivate the scene (without notification) if it already exists; otherwise do nothing
-    active_scenes.push_back(scene);
-    scene.activate();
+    if(scene.is_loaded()) {
+        deactivate_scene0(scene); // Deactivate the scene (without notification) if it already exists; otherwise do nothing
+        active_scenes.push_back(scene);
+        scene.activate();
+    } else {
+        if(load_scene) activate_scene(*load_scene);
+        for(GameObject *object : scene.get_objects()) {
+            for(std::string resource : object->get_loadable_resources()) {
+                load_tasks.push(resource);
+            }
+        }
+        pending_scene = &scene;
+    }
 }
 
 void Engine::deactivate_scene(Scene &scene) {

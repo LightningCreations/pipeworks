@@ -24,5 +24,12 @@ void Scene::add_object(GameObject *object) {
     objects.push_back(object);
 }
 
+bool Scene::is_loaded() {
+    for(GameObject *object : objects) {
+        if(!object->is_loaded()) return false;
+    }
+    return true;
+}
+
 }
 

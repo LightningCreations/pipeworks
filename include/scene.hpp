@@ -25,6 +25,7 @@ class Scene {
     void deactivate();
     std::vector<GameObject*> get_objects();
     void add_object(GameObject*);
+    bool is_loaded(); // Checks every object
 };
 
 }
