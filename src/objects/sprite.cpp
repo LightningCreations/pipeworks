@@ -20,6 +20,7 @@ void Sprite::render(Renderer &renderer) {
     (void) width;
     (void) height;
     (void) image_data;
+    (void) renderer;
 }
 
 void Sprite::finished_loading() {
