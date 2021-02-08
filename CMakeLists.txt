@@ -12,6 +12,7 @@ endif()
 add_library(pipeworks
   src/engine.cpp include/engine.hpp
   src/gameobject.cpp include/gameobject.hpp
+  src/imagedata.cpp
   src/renderer.cpp include/renderer.hpp
   src/scene.cpp include/scene.hpp
   src/resourcemanager.cpp include/resourcemanager.hpp

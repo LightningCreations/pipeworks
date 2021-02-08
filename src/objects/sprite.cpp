@@ -25,8 +25,9 @@ void Sprite::render(Renderer &renderer) {
 
 void Sprite::finished_loading() {
     for(std::string resource : resources) {
-        image_data.push_back(g_resourcemanager.get_imagedata(resource));
+        image_data.push_back(g_resourcemanager.get_image_data(resource));
     }
+    loaded = true;
 }
 
 bool Sprite::is_loaded() {

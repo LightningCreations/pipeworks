@@ -12,6 +12,9 @@ class ImageData {
     uint8_t *data;
   public:
     ImageData(uint32_t width, uint32_t height, uint8_t *data);
+    uint32_t get_width();
+    uint32_t get_height();
+    uint8_t *get_data();
 };
 
 }

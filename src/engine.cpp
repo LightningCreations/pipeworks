@@ -1,8 +1,9 @@
 #include <engine.hpp>
+#include <resourcemanager.hpp>
 
 namespace pipeworks {
 
-Engine::Engine(std::unique_ptr<Renderer> renderer): renderer(std::move(renderer)) {
+Engine::Engine(std::unique_ptr<Renderer> renderer): renderer(std::move(renderer)), active_load_threads(0) {
     this->renderer->set_active_scene_list(&active_scenes);
     this->renderer->set_width(1280);
     this->renderer->set_height(720);
@@ -15,11 +16,38 @@ void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
 void Engine::start0() {
     renderer->open_window();
     while(running) {
+        if(pending_scene) {
+            if(load_tasks.empty() && !active_load_threads) {
+                for(GameObject *obj : pending_scene->get_objects()) {
+                    obj->finished_loading();
+                }
+                activate_scene(*pending_scene);
+                pending_scene = nullptr;
+            } else { // This method does add an extra frame of lag on loading, but oh well
+                for(; active_load_threads < 4 && !load_tasks.empty(); active_load_threads++) {
+                    std::thread load_thread(&Engine::load_resource, this, load_tasks.top());
+                    load_thread.detach();
+                    load_tasks.pop();
+                }
+            }
+        }
         renderer->render_poll();
         if(renderer->is_close_requested()) running = false;
         renderer->sync(60); // 60 FPS default
     }
     renderer->close_window();
+}
+
+void Engine::load_resource(std::string resource) {
+    // TODO: Not all resources are images.
+    // ... but right now, they are.
+    if(g_resourcemanager.is_image_data_loaded(resource)) {
+        active_load_threads--;
+        return;
+    }
+    // TODO: Load image data
+    g_resourcemanager.put_image_data(resource, new ImageData(0, 0, nullptr));
+    active_load_threads--;
 }
 
 void Engine::start() {

@@ -10,6 +10,7 @@ class Engine;
 #include "scene.hpp"
 #include "renderer.hpp"
 
+#include <atomic>
 #include <memory>
 #include <stack>
 #include <string>
@@ -29,8 +30,10 @@ class Engine {
     Scene *pending_scene;
     std::stack<std::string> load_tasks;
     std::thread engine_thread;
-    bool running; // FIXME: Needs thread safety
+    std::atomic_bool running;
     void start0(); // Start in new thread
+    std::atomic_uint8_t active_load_threads;
+    void load_resource(std::string resource);
   protected:
     void deactivate_scene0(Scene &scene); // Deactivate scene without notification; useful in reactivation
   public:
@@ -40,7 +43,7 @@ class Engine {
     void start();
     void stop();
     bool is_running();
-    void join(); // Wait for thread to finish
+    void join(); // Wait for engine thread to finish
     void activate_scene(Scene &scene);
     void deactivate_scene(Scene &scene);
 };
