@@ -7,14 +7,15 @@ namespace pipeworks {
 
 class ImageData {
   private:
-    uint32_t width;
-    uint32_t height;
-    uint8_t *data;
+    const uint32_t m_width;
+    const uint32_t m_height;
+    const uint8_t *m_data;
   public:
-    ImageData(uint32_t width, uint32_t height, uint8_t *data);
-    uint32_t get_width();
-    uint32_t get_height();
-    uint8_t *get_data();
+    ImageData(const uint32_t width, const uint32_t height, const uint8_t *data);
+    const uint32_t width() const;
+    const uint32_t height() const;
+    const uint8_t *data() const;
+    const uint32_t size() const;
 };
 
 }

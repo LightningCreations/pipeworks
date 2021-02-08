@@ -2,18 +2,22 @@
 
 namespace pipeworks {
 
-ImageData::ImageData(uint32_t width, uint32_t height, uint8_t *data): width(width), height(height), data(data) {}
+ImageData::ImageData(const uint32_t width, const uint32_t height, const uint8_t *data): m_width(width), m_height(height), m_data(data) {}
 
-uint32_t ImageData::get_width() {
-    return width;
+const uint32_t ImageData::width() const {
+    return m_width;
 }
 
-uint32_t ImageData::get_height() {
-    return height;
+const uint32_t ImageData::height() const {
+    return m_height;
 }
 
-uint8_t *ImageData::get_data() {
-    return data;
+const uint8_t *ImageData::data() const {
+    return m_data;
+}
+
+const uint32_t ImageData::size() const {
+    return m_width * m_height * 4;
 }
 
 }
