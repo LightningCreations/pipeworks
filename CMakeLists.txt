@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(pipeworks VERSION 0.1.0 LANGUAGES CXX)
+project(pipeworks VERSION 0.1.0 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 
@@ -19,6 +19,9 @@ add_library(pipeworks
 
   src/objects/background.cpp include/objects/background.hpp
   src/objects/sprite.cpp include/objects/sprite.hpp
+
+  src/stb_image.c 3rdparty/stb/stb_image.h
+  src/whereami.c src/whereami.h
 )
 target_include_directories(pipeworks
   PUBLIC
@@ -26,6 +29,7 @@ target_include_directories(pipeworks
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb
 )
 target_compile_features(pipeworks PUBLIC cxx_std_20)
 target_compile_options(pipeworks PRIVATE

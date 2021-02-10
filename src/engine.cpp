@@ -1,6 +1,14 @@
 #include <engine.hpp>
 #include <resourcemanager.hpp>
 
+extern "C" {
+
+#include <stb_image.h>
+
+}
+
+#include <whereami.h>
+
 namespace pipeworks {
 
 Engine::Engine(std::unique_ptr<Renderer> renderer): renderer(std::move(renderer)), active_load_threads(0) {
@@ -45,8 +53,20 @@ void Engine::load_resource(std::string resource) {
         active_load_threads--;
         return;
     }
-    // TODO: Load image data
-    g_resourcemanager.put_image_data(resource, new ImageData(0, 0, nullptr));
+
+    // TODO: Support additional loading locations (currently only supports "assets/<resource>")
+    // TODO: Cache executable path
+    int pathlen, dirnamelen;
+    char *path = new char[pathlen = wai_getExecutablePath(nullptr, 0, nullptr)];
+    wai_getExecutablePath(path, pathlen, &dirnamelen);
+    path[dirnamelen] = '\0';
+    // TODO: Support images that aren't 32bpp more efficiently
+    int x, y, _n;
+    uint8_t *data = stbi_load((std::string(path) + "/assets/" + resource).c_str(), &x, &y, &_n, 4);
+    g_resourcemanager.put_image_data(resource, new ImageData(x, y, data));
+    // FIXME: Resource leak: data is never freed (needs `stbi_free(data)`)
+
+    delete[] path;
     active_load_threads--;
 }
 

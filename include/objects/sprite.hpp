@@ -26,6 +26,7 @@ class Sprite : public GameObject {
     std::vector<ImageData> image_data;
     std::vector<std::string> resources;
     bool loaded;
+    uint16_t frame; // If someone has more than 65536 animation frames on a single sprite, there is something wrong.
   public:
     Sprite(float x, float y, float z, float width, float height, std::vector<ImageData> data);
     Sprite(float x, float y, float z, float width, float height, std::vector<std::string> resources);
