@@ -125,6 +125,7 @@ RECENT REVISION HISTORY:
 
 #ifdef __GNUC__ // Disable a warning that apparently triggers - Ray
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas" // Because GCC doesn't recognize unknown-warning-option
 #pragma GCC diagnostic ignored "-Wunknown-warning-option" // Because Clang doesn't recognize unused-but-set-variable
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
 #endif
