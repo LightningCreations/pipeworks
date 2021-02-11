@@ -123,6 +123,12 @@ RECENT REVISION HISTORY:
 #ifndef STBI_INCLUDE_STB_IMAGE_H
 #define STBI_INCLUDE_STB_IMAGE_H
 
+#ifdef __GNUC__ // Disable a warning that apparently triggers - Ray
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-warning-option" // Because Clang doesn't recognize unused-but-set-variable
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#endif
+
 // DOCUMENTATION
 //
 // Limitations:
@@ -7532,6 +7538,10 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
    stbi__start_callbacks(&s, (stbi_io_callbacks *) c, user);
    return stbi__is_16_main(&s);
 }
+
+#ifdef __GNUC__ // Cleanup from earlier
+#pragma GCC diagnostic pop
+#endif
 
 #endif // STB_IMAGE_IMPLEMENTATION
 
