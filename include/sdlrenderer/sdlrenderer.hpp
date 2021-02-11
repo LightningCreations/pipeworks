@@ -20,6 +20,7 @@ class SDLRenderer : public Renderer {
     uint32_t width;
     uint32_t height;
     float xoa;
+    bool keys_down[256];
   public:
     SDLRenderer();
     ~SDLRenderer();
@@ -34,6 +35,7 @@ class SDLRenderer : public Renderer {
     void fill_rect(float x, float y, float w, float h, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
     uint32_t get_width();
     uint32_t get_height();
+    bool key_down(char c);
 };
 
 }

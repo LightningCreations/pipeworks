@@ -75,6 +75,16 @@ void SDLRenderer::render_poll() {
     SDL_Event event;
     while(SDL_PollEvent(&event)) {
         if(event.type == SDL_QUIT) m_is_close_requested = true;
+        else if(event.type == SDL_KEYDOWN) {
+            if(event.key.keysym.sym < 256) {
+                keys_down[event.key.keysym.sym] = true;
+            } // FIXME: Support non-ASCII keycodes
+        }
+        else if(event.type == SDL_KEYUP) {
+            if(event.key.keysym.sym < 256) {
+                keys_down[event.key.keysym.sym] = false;
+            } // FIXME: Support non-ASCII keycodes
+        }
     }
 }
 
@@ -133,6 +143,10 @@ void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t
             m_pixels[(curx+cury*this->width)*4+3] = r; // evaluating off{x,y}+n{x,y} every iteration.
         }
     }
+}
+
+bool SDLRenderer::key_down(char c) {
+    return keys_down[c];
 }
 
 }

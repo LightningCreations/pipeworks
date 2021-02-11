@@ -25,8 +25,12 @@ void StarfieldBackground::render(Renderer &renderer) {
         );
 
         // FIXME: TEMP CODE (awaiting proper responsive scrolling)
-        starx[i] += 0.1f;
+        starx[i] += (renderer.key_down('a') ? 0.1f : 0) - (renderer.key_down('d') ? 0.1f : 0);
+        stary[i] += (renderer.key_down('w') ? 0.1f : 0) - (renderer.key_down('s') ? 0.1f : 0);
         if(starx[i]/starz[i] >= 2) starx[i] -= starz[i] * 4; // * 4 because we're going from 2 to -2
+        if(starx[i]/starz[i] < -2) starx[i] += starz[i] * 4;
+        if(stary[i]/starz[i] >= 1) stary[i] -= starz[i] * 2; // * 2 because we're going from 1 to -1
+        if(stary[i]/starz[i] < -1) stary[i] += starz[i] * 2;
     }
 }
 
