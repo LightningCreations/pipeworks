@@ -4,4 +4,4 @@ namespace pipeworks {
 
 GameObject::~GameObject() {}
 
-}
+} // namespace pipeworks

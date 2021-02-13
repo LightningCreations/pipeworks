@@ -20,4 +20,4 @@ const uint32_t ImageData::size() const {
     return m_width * m_height * 4;
 }
 
-}
+} // namespace pipeworks

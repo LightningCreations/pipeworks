@@ -14,13 +14,13 @@ class SDLRenderer : public Renderer {
     SDL_Renderer *m_renderer = nullptr;
     SDL_Texture *m_texture = nullptr;
     uint8_t *m_pixels = nullptr;
-    bool m_is_close_requested = false;
-    uint32_t next_time = 0;
-    std::vector<Scene> *active_scenes;
-    uint32_t width;
-    uint32_t height;
-    float xoa;
-    bool keys_down[256];
+    bool m_close_requested = false;
+    uint32_t m_next_time = 0;
+    std::vector<Scene> *m_active_scenes;
+    uint32_t m_width;
+    uint32_t m_height;
+    float m_xoa;
+    bool m_keys_down[256];
   public:
     SDLRenderer();
     ~SDLRenderer();
@@ -29,12 +29,12 @@ class SDLRenderer : public Renderer {
     void set_height(uint32_t);
     void open_window();
     void close_window();
-    bool is_close_requested();
+    bool close_requested();
     void render_poll();
     void sync(uint32_t);
     void fill_rect(float x, float y, float w, float h, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-    uint32_t get_width();
-    uint32_t get_height();
+    uint32_t width();
+    uint32_t height();
     bool key_down(char c);
 };
 

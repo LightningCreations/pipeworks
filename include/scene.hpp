@@ -16,16 +16,16 @@ namespace pipeworks {
 
 class Scene {
   private:
-    uint32_t id;
-    std::vector<GameObject*> objects;
+    uint32_t m_id;
+    std::vector<GameObject*> m_objects;
   public:
     Scene();
-    uint32_t get_id();
+    uint32_t id();
     void activate();
     void deactivate();
-    std::vector<GameObject*> get_objects();
+    std::vector<GameObject*> objects();
     void add_object(GameObject*);
-    bool is_loaded(); // Checks every object
+    bool loaded(); // Checks every object
 };
 
 }

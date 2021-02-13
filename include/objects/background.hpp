@@ -13,9 +13,9 @@ namespace pipeworks {
 
 class Background : public GameObject {
   private:
-    float x;
-    float y;
-    // float z; // Since depth sorting doesn't exist yet, neither does a reason for a Z coordinate.
+    float m_x;
+    float m_y;
+    // float m_z; // Since depth sorting doesn't exist yet, neither does a reason for a Z coordinate.
   public:
     Background(float x, float y, float z);
     void render(Renderer&);

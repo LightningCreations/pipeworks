@@ -12,7 +12,7 @@ class SDLManager {
     void quit_video();
 };
 
-SDLManager *get_global_sdlmanager();
+SDLManager *global_sdlmanager();
 
 }
 

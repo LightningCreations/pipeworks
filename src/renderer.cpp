@@ -4,4 +4,4 @@ namespace pipeworks {
 
 Renderer::~Renderer() {}
 
-}
+} // namespace pipeworks

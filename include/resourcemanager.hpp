@@ -12,12 +12,12 @@ namespace pipeworks {
 
 class ResourceManager {
   private:
-    std::map<std::string, ImageData*> loaded_imagedata;
-    std::shared_mutex access_mutex;
+    std::map<std::string, ImageData*> m_loaded_imagedata;
+    std::shared_mutex m_access_mutex;
   public:
     ResourceManager();
-    ImageData &get_image_data(const std::string &name);
-    bool is_image_data_loaded(const std::string &name);
+    ImageData &image_data(const std::string &name);
+    bool image_data_loaded(const std::string &name);
     void put_image_data(const std::string &name, ImageData *imagedata);
 };
 

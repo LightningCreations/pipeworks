@@ -16,26 +16,26 @@ class SDLRenderManager {
 };
 
 SDLRenderManager::SDLRenderManager() {
-    get_global_sdlmanager()->init_video();
+    global_sdlmanager()->init_video();
 }
 
 SDLRenderManager::~SDLRenderManager() {
-    get_global_sdlmanager()->quit_video();
+    global_sdlmanager()->quit_video();
 }
 
 void SDLRenderManager::verify_active() {
-    get_global_sdlmanager()->verify_active();
+    global_sdlmanager()->verify_active();
 }
 
-static SDLRenderManager render_manager;
+static SDLRenderManager s_render_manager;
 
-static std::vector<Scene> engine_hasnt_passed_active_scenes_list_ub_prevention;
-SDLRenderer::SDLRenderer(): active_scenes(&engine_hasnt_passed_active_scenes_list_ub_prevention) {
-    render_manager.verify_active(); // Initialize video if it isn't initialized already
+static std::vector<Scene> s_engine_hasnt_passed_active_scenes_list_ub_prevention;
+SDLRenderer::SDLRenderer(): m_active_scenes(&s_engine_hasnt_passed_active_scenes_list_ub_prevention) {
+    s_render_manager.verify_active(); // Initialize video if it isn't initialized already
 }
 
 SDLRenderer::~SDLRenderer() {
-    render_manager.verify_active(); // Make sure the manager doesn't get destructed too soon (it shouldn't, I'm being paranoid)
+    s_render_manager.verify_active(); // Make sure the manager doesn't get destructed too soon (it shouldn't, I'm being paranoid)
 }
 
 void SDLRenderer::open_window() {
@@ -57,13 +57,13 @@ void SDLRenderer::close_window() {
     m_window = nullptr;
 }
 
-bool SDLRenderer::is_close_requested() {
-    return m_is_close_requested;
+bool SDLRenderer::close_requested() {
+    return m_close_requested;
 }
 
 void SDLRenderer::render_poll() {
-    for(Scene scene : *active_scenes) {
-        for(GameObject *object : scene.get_objects()) {
+    for(Scene scene : *m_active_scenes) {
+        for(GameObject *object : scene.objects()) {
             object->render(*this); // TODO: Add special-casing for common GameObjects
         }
     }
@@ -74,15 +74,15 @@ void SDLRenderer::render_poll() {
 
     SDL_Event event;
     while(SDL_PollEvent(&event)) {
-        if(event.type == SDL_QUIT) m_is_close_requested = true;
+        if(event.type == SDL_QUIT) m_close_requested = true;
         else if(event.type == SDL_KEYDOWN) {
             if(event.key.keysym.sym < 256) {
-                keys_down[event.key.keysym.sym] = true;
+                m_keys_down[event.key.keysym.sym] = true;
             } // FIXME: Support non-ASCII keycodes
         }
         else if(event.type == SDL_KEYUP) {
             if(event.key.keysym.sym < 256) {
-                keys_down[event.key.keysym.sym] = false;
+                m_keys_down[event.key.keysym.sym] = false;
             } // FIXME: Support non-ASCII keycodes
         }
     }
@@ -90,47 +90,47 @@ void SDLRenderer::render_poll() {
 
 void SDLRenderer::sync(uint32_t fps) {
     uint32_t cur_time = SDL_GetTicks();
-    if(cur_time < next_time) SDL_Delay(next_time - cur_time);
-    else next_time = cur_time; // If we're behind, stop being behind
-    next_time += 1000/fps;
+    if(cur_time < m_next_time) SDL_Delay(m_next_time - cur_time);
+    else m_next_time = cur_time; // If we're behind, stop being behind
+    m_next_time += 1000/fps;
 }
 
 void SDLRenderer::set_active_scene_list(std::vector<Scene> *scenes) {
-    active_scenes = scenes;
+    m_active_scenes = scenes;
     // No further processing needed
 }
 
 void SDLRenderer::set_width(uint32_t width) {
-    this->width = width;
-    xoa = ((float) width) / this->height; // Offset amount to stay centered
+    m_width = width;
+    m_xoa = ((float) m_width) / m_height; // Offset amount to stay centered
 }
 
 void SDLRenderer::set_height(uint32_t height) {
-    this->height = height;
-    xoa = ((float) this->width) / height; // Offset amount to stay centered
+    m_height = height;
+    m_xoa = ((float) m_width) / m_height; // Offset amount to stay centered
 }
 
-uint32_t SDLRenderer::get_width() {
-    return width;
+uint32_t SDLRenderer::width() {
+    return m_width;
 }
 
-uint32_t SDLRenderer::get_height() {
-    return height;
+uint32_t SDLRenderer::height() {
+    return m_height;
 }
 
 void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     assert(width >= 0 && height >= 0 && "Please don't send me negative width/height for a rectangle, that's just not kind");
     // We're multiplying by height to not stretch the image. I'll try to write a thorough explanation later
-    int32_t nx = static_cast<int32_t>(((x + xoa) * this->height)) / 2; if(nx >= static_cast<int32_t>(this->width)) return; // This can't possibly be a thread-safety issue, right?
-    int32_t ny = static_cast<int32_t>(((y + 1) * this->height)) / 2; if(ny >= static_cast<int32_t>(this->height)) return;  // ... right?
-    int32_t nw = static_cast<int32_t>((width * this->height)) / 2;                                                         // I'm just going to hope it isn't...
-    int32_t nh = static_cast<int32_t>((height * this->height)) / 2;                                                        // ... since otherwise I need to spend function calls.
+    int32_t nx = static_cast<int32_t>(((x + m_xoa) * m_height)) / 2; if(nx >= static_cast<int32_t>(m_width)) return; // This can't possibly be a thread-safety issue, right?
+    int32_t ny = static_cast<int32_t>(((y + 1) * m_height)) / 2; if(ny >= static_cast<int32_t>(m_height)) return;    // ... right?
+    int32_t nw = static_cast<int32_t>((width * m_height)) / 2;                                                       // I'm just going to hope it isn't...
+    int32_t nh = static_cast<int32_t>((height * m_height)) / 2;                                                      // ... since otherwise I need to spend function calls.
 
     // And now, for correction factors in case somebody decided to pass me out-of-bounds coordinates.
-    if(nx < 0) { nw += nx; nx = 0; }                                       // If we're off the   left  side, cut the width
-    if(ny < 0) { nh += ny; ny = 0; }                                       //        "           top         "       height
-    if(nx+nw > static_cast<int32_t>(this->width))  nw = this->width  - nx; //        "          right        "       width
-    if(ny+nh > static_cast<int32_t>(this->height)) nh = this->height - ny; //        "          bottom       "       height
+    if(nx < 0) { nw += nx; nx = 0; }                               // If we're off the   left  side, cut the width
+    if(ny < 0) { nh += ny; ny = 0; }                               //        "           top         "       height
+    if(nx+nw > static_cast<int32_t>(m_width))  nw = m_width  - nx; //        "          right        "       width
+    if(ny+nh > static_cast<int32_t>(m_height)) nh = m_height - ny; //        "          bottom       "       height
 
     if(a < 128) return; // Temporary fix for not having alpha blending
 
@@ -138,15 +138,15 @@ void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t
         // Basically, I just want a simple way to always render at least one pixel.
         // I trust the optimizer to essentially make this a do-for loop, which would solve the problem entirely.
         for(int32_t cury = ny; cury < (ny+nh) || cury == ny; cury++) { // BTW, the reason I'm using cur{x,y} instead of offsets is again for optimization.
-            m_pixels[(curx+cury*this->width)*4+1] = b; // This way, the compiler only has to
-            m_pixels[(curx+cury*this->width)*4+2] = g; // evaluate n{x,y}+n{w,h} once instead of
-            m_pixels[(curx+cury*this->width)*4+3] = r; // evaluating off{x,y}+n{x,y} every iteration.
+            m_pixels[(curx+cury*m_width)*4+1] = b; // This way, the compiler only has to
+            m_pixels[(curx+cury*m_width)*4+2] = g; // evaluate n{x,y}+n{w,h} once instead of
+            m_pixels[(curx+cury*m_width)*4+3] = r; // evaluating off{x,y}+n{x,y} every iteration.
         }
     }
 }
 
 bool SDLRenderer::key_down(char c) {
-    return keys_down[c];
+    return m_keys_down[c];
 }
 
 }
