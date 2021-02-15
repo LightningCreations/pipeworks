@@ -39,6 +39,7 @@ class Engine {
     void start0(); // Start in new thread
     std::atomic_uint8_t m_active_load_threads;
     void load_resource(std::string resource);
+    std::vector<Event> m_events;
   protected:
     /// \brief Deactivate Scene if it is active *without* notifying it.
     /// \param scene The Scene to deactivate.
@@ -99,6 +100,13 @@ class Engine {
     /// \param event The Event to register.
     /// \pre This may be called before or after the Engine is started. If the Engine is started, this function must be called from the Engine thread; otherwise, the behavior is undefined.
     void register_event(std::unique_ptr<Event> event);
+    /// \brief Fire an Event.
+    /// \param type The category of events to fire.
+    /// \param data The event-specific data corresponding to the event fired.
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
+    ///
+    /// Specifically, this runs the callback on any and all \ref Event "Events" that have been previously registered with \ref register_event "register_event" corresponding to the type specified.
+    void fire_event(EventType type, void *data);
 };
 
 }

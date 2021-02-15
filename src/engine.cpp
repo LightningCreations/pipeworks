@@ -19,6 +19,7 @@ void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
 void Engine::start0() {
     m_renderer->open_window();
     while(m_running) {
+        fire_event(FRAME, nullptr); // No data for start-of-frame yet
         if(m_pending_scene) {
             if(m_load_tasks.empty() && !m_active_load_threads) {
                 for(GameObject *obj : m_pending_scene->objects()) {
@@ -34,6 +35,7 @@ void Engine::start0() {
                 }
             }
         }
+        fire_event(FRAMEEND, nullptr); // No data for end-of-frame yet
         m_renderer->render_poll();
         if(m_renderer->close_requested()) m_running = false;
         m_renderer->sync(60); // 60 FPS default
@@ -110,6 +112,16 @@ void Engine::deactivate_scene0(Scene &scene) {
             m_active_scenes.erase(it);
             break;
         }
+    }
+}
+
+void Engine::register_event(std::unique_ptr<Event> event) {
+    m_events.push_back(*event);
+}
+
+void Engine::fire_event(EventType type, void *data) {
+    for(Event e : m_events) {
+        if(type & e.m_type) e.call(data);
     }
 }
 

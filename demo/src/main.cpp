@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     Engine engine{std::move(renderer)};
 
     Scene title_scene{};
-    title_scene.add_object(new StarfieldBackground(0, 0, 100000)); // farthest back
+    title_scene.add_object(new StarfieldBackground(0, 0, 100000, engine)); // farthest back
     title_scene.add_object(new Sprite(-0.2f, -0.2f, 1, 0.4f, 0.4f, std::vector<std::string>{std::string("ship090.png")})); // C++ boilerplate.
     engine.set_init_scene(std::make_unique<Scene>(title_scene));
 
