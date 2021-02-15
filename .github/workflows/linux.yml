@@ -44,4 +44,4 @@ jobs:
         parallel: 8
         build-dir: ${{github.workspace}}/build-gcc 
         build-type: Release
-        configure-options: -GNinja -DPIPEWORKS_BUILD_DOCS=OFF
+        configure-options: -GNinja

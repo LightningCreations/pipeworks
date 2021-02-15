@@ -3,7 +3,8 @@ project(pipeworks VERSION 0.1.0 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 
-option(PIPEWORKS_BUILD_DOCS "Build the Doxygen documentation for Pipeworks" ON)
+find_package(Doxygen)
+option(PIPEWORKS_BUILD_DOCS "Build the Doxygen documentation for Pipeworks" DOXYGEN_FOUND)
 
 option(PIPEWORKS_BUILD_SDLRENDERER "Build the SDL2-based renderer for Pipeworks" ON)
 
