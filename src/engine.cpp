@@ -125,4 +125,8 @@ void Engine::fire_event(EventType type, void *data) {
     }
 }
 
+Renderer& Engine::renderer() {
+    return *m_renderer;
+}
+
 }

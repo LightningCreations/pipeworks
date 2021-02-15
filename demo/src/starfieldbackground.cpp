@@ -8,7 +8,7 @@ void call_scroll(void *obj, void *data) {
     ((StarfieldBackground*) obj)->scroll(data);
 }
 
-StarfieldBackground::StarfieldBackground(float x, float y, float z, Engine &engine) noexcept: x(x), y(y) {
+StarfieldBackground::StarfieldBackground(float z, Engine &engine) noexcept: x(0), y(0) {
     (void) z; // This is sorting Z, not star Z. And there is no sorting.
     std::random_device rd; // Doesn't need to be cryptographically seeded or anything
     std::mt19937 gen(rd()); // The actual algorithm doesn't need to be cryptographic either
@@ -23,16 +23,27 @@ StarfieldBackground::StarfieldBackground(float x, float y, float z, Engine &engi
 
 void StarfieldBackground::scroll(void *eventdata) {
     if(!renderer) return; // Because currently the renderer handles key state. @InfernoDeity please fix
+    float xoff = x - prev_x;
+    float yoff = y - prev_y;
     Renderer &renderer = *this->renderer;
     for(int i = 0; i < STARFIELD_NUM_STARS; i++) {
-        // FIXME: TEMP CODE (awaiting proper responsive scrolling)
-        starx[i] += (renderer.key_down('a') ? 0.1f : 0) - (renderer.key_down('d') ? 0.1f : 0);
-        stary[i] += (renderer.key_down('w') ? 0.1f : 0) - (renderer.key_down('s') ? 0.1f : 0);
+        starx[i] += xoff;
+        stary[i] += yoff;
         if(starx[i]/starz[i] >= 2) starx[i] -= starz[i] * 4; // * 4 because we're going from 2 to -2
         if(starx[i]/starz[i] < -2) starx[i] += starz[i] * 4;
         if(stary[i]/starz[i] >= 1) stary[i] -= starz[i] * 2; // * 2 because we're going from 1 to -1
         if(stary[i]/starz[i] < -1) stary[i] += starz[i] * 2;
     }
+    prev_x = x;
+    prev_y = y;
+}
+
+void StarfieldBackground::set_x(float x) {
+    this->x = x;
+}
+
+void StarfieldBackground::set_y(float y) {
+    this->y = y;
 }
 
 void StarfieldBackground::render(Renderer &renderer) {

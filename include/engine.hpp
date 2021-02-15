@@ -107,6 +107,12 @@ class Engine {
     ///
     /// Specifically, this runs the callback on any and all \ref Event "Events" that have been previously registered with \ref register_event "register_event" corresponding to the type specified.
     void fire_event(EventType type, void *data);
+    /// \brief Get the active Renderer.
+    /// \return The in-use render backend implementation.
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
+    ///
+    /// The Renderer contains the interfaces to drawing and getting input (currently), making it essential for most functions that access the Engine.
+    Renderer& renderer();
 };
 
 }

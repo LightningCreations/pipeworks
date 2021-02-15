@@ -14,6 +14,14 @@ Sprite::Sprite(float x, float y, float z, float width, float height, std::vector
     (void) z;
 }
 
+uint16_t Sprite::frame() {
+    return m_frame;
+}
+
+void Sprite::set_frame(uint16_t frame) {
+    m_frame = frame;
+}
+
 void Sprite::render(Renderer &renderer) {
     if(!m_loaded) return; // Can't render if we aren't loaded
     assert(m_frame >= 0 && m_frame < m_image_data.size());
