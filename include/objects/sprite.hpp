@@ -16,6 +16,7 @@ class Sprite;
 
 namespace pipeworks {
 
+/// \brief A movable, resizable object.
 class Sprite : public GameObject {
   private:
     float m_x;
@@ -28,7 +29,21 @@ class Sprite : public GameObject {
     bool m_loaded;
     uint16_t m_frame; // If someone has more than 65536 animation frames on a single sprite, there is something wrong.
   public:
+    /// \brief Create a Sprite with position, size, and existing image data.
+    /// \param x The horizontal position of the Sprite.
+    /// \param y The vertical position of the Sprite.
+    /// \param z The depth of the Sprite. (unused)
+    /// \param width The width of the Sprite, where the screen is 2 units high.
+    /// \param height The height of the Sprite, where the screen is 2 units high.
+    /// \param data A list of ImageData objects for each frame of animation.
     Sprite(float x, float y, float z, float width, float height, std::vector<ImageData> data);
+    /// \brief Create a Sprite with position, size, and files to load image data from.
+    /// \param x The horizontal position of the Sprite.
+    /// \param y The vertical position of the Sprite.
+    /// \param z The depth of the Sprite. (unused)
+    /// \param width The width of the Sprite, where the screen is 2 units high.
+    /// \param height The height of the Sprite, where the screen is 2 units high.
+    /// \param resources A list of paths to resources containing image data for each frame of animation.
     Sprite(float x, float y, float z, float width, float height, std::vector<std::string> resources);
     void render(Renderer&);
     void finished_loading();
