@@ -21,11 +21,10 @@ enum EventType {
 struct Event {
   private:
     void *m_data;
+    void(*m_callback)(void*,void*); // Gosh darn function pointers.
   public:
     /// \brief All events that can be responded to, as a bitmask.
     EventType m_type;
-    /// \brief Function to call when the event triggers.
-    void(*m_callback)(void*,void*); // Gosh darn function pointers.
     /// \brief Create a new event listener.
     /// \param type The type(s) of event to react to.
     /// \param callback The function to be called upon the event triggering.
@@ -35,6 +34,10 @@ struct Event {
     ///
     /// The callback takes two `void*` as parameters. The first is the user-defined data, while the second is an event-specific data structure.
     Event(EventType type, void(*callback)(void*,void*), void *data);
+    /// \brief Call the event listener.
+    /// \param eventdata The event-specific data.
+    /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
+    void call(void *eventdata);
 };
 
 } // namespace pipeworks
