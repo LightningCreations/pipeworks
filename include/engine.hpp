@@ -41,11 +41,10 @@ class Engine {
   protected:
     /// \brief Deactivate Scene if it is active *without* notifying it.
     /// \param scene The Scene to deactivate.
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
     ///
     /// This function is primarily useful for bringing scenes to the front, as notifying the scene of being deactivated is not necessarily useful.
     /// Calling this function without promptly reactivating the Scene could have unintended consequences.
-    ///
-    /// Calling this from any thread except the Engine thread results in undefined behavior.
     void deactivate_scene0(Scene &scene);
   public:
     /// \brief Create a new Engine.
@@ -53,24 +52,20 @@ class Engine {
     Engine(std::unique_ptr<Renderer> renderer);
     /// \brief Set the Scene to be used on initialization.
     /// \param scene The Scene to be used as the initial scene.
+    /// \pre This may be called before or after the Engine is started. If the Engine is started, this function must be called from the Engine thread; otherwise, the behavior is undefined.
     ///
     /// This scene is loaded as if by \ref activate_scene "activate_scene(scene)" when the \ref start() function is called.
-    /// This may be called before or after the Engine is started.
-    /// If the Engine is started, this function must be called from the Engine thread; otherwise, the behavior is undefined.
     void set_init_scene(std::unique_ptr<Scene> scene);
     /// \brief Set the Scene to be used as a loading transition.
     /// \param scene The Scene to be used when loading.
+    /// \pre If the Scene passed to this function needs to load resources, the behavior is undefined.
+    /// \pre This may be called before or after the Engine is started. If the Engine is started, this function must be called from the Engine thread; otherwise, the behavior is undefined.
     ///
     /// When a Scene is activated, the first thing done is checking if the Scene's resources are all loaded.
     /// If they aren't, the Scene set by this function is activated instead.
-    /// If the Scene passed to this function needs to load resources, the behavior is undefined.
-    ///
-    /// This may be called before or after the Engine is started.
-    /// If the Engine is started, this function must be called from the Engine thread; otherwise, the behavior is undefined.
     void set_load_scene(std::unique_ptr<Scene> scene);
     /// \brief Start the Engine in a new thread.
-    ///
-    /// Calling this after the Engine has already been started results in undefined behavior.
+    /// \pre Calling this after the Engine has already been started results in undefined behavior.
     void start();
     /// \brief Stop the Engine.
     ///
@@ -85,22 +80,19 @@ class Engine {
     /// This may be called from any thread.
     bool running();
     /// \brief Wait for the Engine thread to finish.
+    /// \pre Calling this from the Engine thread results in undefined behavior.
     ///
     /// This should not be implemented with a busy loop.
-    ///
-    /// Calling this from the Engine thread results in undefined behavior.
     void join();
     /// \brief Activate a Scene, or move an already active Scene to the front.
     /// \param scene The Scene to activate.
-    ///
-    /// Calling this from any thread except the Engine thread results in undefined behavior.
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
     void activate_scene(Scene &scene);
     /// \brief Deactivate a Scene if a Scene is active.
     /// \param scene The Scene to deactivate.
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
     ///
     /// In addition to disabling rendering and updating, this function also notifies the Scene it has been deactivated so cleanup calls may be made.
-    ///
-    /// Calling this from any thread except the Engine thread results in undefined behavior.
     void deactivate_scene(Scene &scene);
 };
 
