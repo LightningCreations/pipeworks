@@ -15,7 +15,7 @@ jobs:
       with:
         submodules: true 
     - name: Install packages
-      run: sudo apt-get update && sudo apt-get install ninja-build libsdl2-dev
+      run: sudo apt-get update && sudo apt-get install ninja-build libsdl2-dev doxygen
     - name: Clang Build
       uses: LightningCreations/action-cmake-build@v1.2
       with:
@@ -44,4 +44,4 @@ jobs:
         parallel: 8
         build-dir: ${{github.workspace}}/build-gcc 
         build-type: Release
-        configure-options: -GNinja
+        configure-options: -GNinja -DPIPEWORKS_BUILD_DOCS=OFF

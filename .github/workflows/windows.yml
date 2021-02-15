@@ -23,4 +23,4 @@ jobs:
           parallel: 8
           build-dir: ${{github.workspace}}/build-windows
           build-type: Release
-          configure-options:
+          configure-options: -DPIPEWORKS_BUILD_DOCS=OFF
