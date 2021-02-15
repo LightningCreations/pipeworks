@@ -8,6 +8,7 @@
 
 namespace pipeworks {
 
+/// \brief Renderer implementation using SDL2.
 class SDLRenderer : public Renderer {
   private:
     SDL_Window *m_window = nullptr;
