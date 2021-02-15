@@ -8,6 +8,7 @@ class Engine;
 
 }
 
+#include "event.hpp"
 #include "scene.hpp"
 #include "renderer.hpp"
 
@@ -94,6 +95,10 @@ class Engine {
     ///
     /// In addition to disabling rendering and updating, this function also notifies the Scene it has been deactivated so cleanup calls may be made.
     void deactivate_scene(Scene &scene);
+    /// \brief Register an Event.
+    /// \param event The Event to register.
+    /// \pre This may be called before or after the Engine is started. If the Engine is started, this function must be called from the Engine thread; otherwise, the behavior is undefined.
+    void register_event(std::unique_ptr<Event> event);
 };
 
 }
