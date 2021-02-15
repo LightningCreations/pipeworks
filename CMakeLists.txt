@@ -3,8 +3,11 @@ project(pipeworks VERSION 0.1.0 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 
-option(PIPEWORKS_BUILD_DEMO "Build the Pipeworks demo, Fire of the Clouds" ON)
+option(PIPEWORKS_BUILD_DOCS "Build the Doxygen documentation for Pipeworks" ON)
+
 option(PIPEWORKS_BUILD_SDLRENDERER "Build the SDL2-based renderer for Pipeworks" ON)
+
+option(PIPEWORKS_BUILD_DEMO "Build the Pipeworks demo, Fire of the Clouds" ON)
 if(PIPEWORKS_BUILD_DEMO AND NOT PIPEWORKS_BUILD_SDLRENDERER)
   message(FATAL_ERROR "Building the demo requires the SDL2 renderer; please check your configuration!")
 endif()
@@ -83,6 +86,22 @@ if(PIPEWORKS_BUILD_SDLRENDERER)
   else()
     target_link_libraries(pipeworks-sdlrenderer PUBLIC SDL2::SDL2) # Support both legacy and modern CMake config files
   endif()
+endif()
+
+if(PIPEWORKS_BUILD_DOCS)
+  find_package(Doxygen REQUIRED)
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile.in
+    ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    @ONLY
+  )
+
+  add_custom_target(doc ALL
+    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    COMMENT "Running Doxygen"
+    VERBATIM
+  )
 endif()
 
 add_subdirectory(bindings)
