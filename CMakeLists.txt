@@ -103,6 +103,8 @@ if(PIPEWORKS_BUILD_DOCS)
     COMMENT "Running Doxygen"
     VERBATIM
   )
+
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc/ TYPE DOC)
 endif()
 
 add_subdirectory(bindings)
