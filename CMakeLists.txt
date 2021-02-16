@@ -27,6 +27,7 @@ add_library(pipeworks
 
   src/stb_image.c 3rdparty/stb/stb_image.h
   src/whereami.c src/whereami.h
+  src/input.cpp include/input.hpp
 )
 target_include_directories(pipeworks
   PUBLIC

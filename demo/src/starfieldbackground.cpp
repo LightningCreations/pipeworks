@@ -4,7 +4,7 @@
 
 namespace fotc {
 
-void call_scroll(void *obj, void *data) {
+void call_scroll(void *obj, void *data,pipeworks::EventType,pipeworks::Engine&) {
     ((StarfieldBackground*) obj)->scroll(data);
 }
 
@@ -18,7 +18,7 @@ StarfieldBackground::StarfieldBackground(float z, Engine &engine) noexcept: x(0)
         stary[i] = random(gen) * starz[i]; // Normalized from -1 to 1 in screen space
         starx[i] = random(gen) * starz[i] * 2; // Normalized from -2 to 2 in screen space (the screen is likely to be wider than it is tall)
     }
-    engine.register_event(std::unique_ptr<Event>(new Event(FRAME, &call_scroll, this)));
+    engine.register_event(std::unique_ptr<Event>(new Event(EventType::Frame, &call_scroll, this)));
 }
 
 void StarfieldBackground::scroll(void *eventdata) {

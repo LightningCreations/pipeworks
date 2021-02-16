@@ -3,28 +3,42 @@
 
 namespace pipeworks {
 
+class Engine;
+
 /// \brief Specifies what particular event is being listened to. (used by Event)
-enum EventType {
+enum class EventType {
     /// \brief Beginning of frame, called after \ref Renderer::render_poll "render_poll"
-    FRAME = 1,
+    Frame = 1,
     /// \brief End of frame, called before \ref Renderer::render_poll "render_poll"
-    FRAMEEND = 2,
+    FrameEnd = 2,
     /// \brief Key has just been pressed, or is being repeated by the OS
-    KEYDOWN = 4,
+    KeyDown = 4,
     /// \brief Key has just been released
-    KEYUP = 8,
+    KeyUp = 8,
     /// \brief Listen to all events
-    ALL = 0xF
+    All = 0xF
 };
+
+constexpr EventType operator|(EventType a,EventType b)noexcept{
+  return EventType{static_cast<int>(a)|static_cast<int>(b)};
+}
+constexpr EventType operator&(EventType a,EventType b)noexcept{
+  return EventType{static_cast<int>(a)&static_cast<int>(b)};
+}
+constexpr EventType operator~(EventType a)noexcept{
+  return EventType{~static_cast<int>(a)}&EventType::All;
+}
 
 /// \brief Defines a response to a particular event.
 struct Event {
   private:
     void *m_data;
-    void(*m_callback)(void*,void*); // Gosh darn function pointers.
+    void(*m_callback)(void*,void*,EventType,Engine&); // Gosh darn function pointers.
+    EventType m_type;
+    friend class Engine;
   public:
     /// \brief All events that can be responded to, as a bitmask.
-    EventType m_type;
+    
     /// \brief Create a new event listener.
     /// \param type The type(s) of event to react to.
     /// \param callback The function to be called upon the event triggering.
@@ -33,11 +47,12 @@ struct Event {
     /// Multiple events can be reacted to with the same function by ORing together multiple values of EventType
     ///
     /// The callback takes two `void*` as parameters. The first is the user-defined data, while the second is an event-specific data structure.
-    Event(EventType type, void(*callback)(void*,void*), void *data);
+    Event(EventType type, void(*callback)(void*,void*,EventType,Engine&), void *data);
+    
     /// \brief Call the event listener.
     /// \param eventdata The event-specific data.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
-    void call(void *eventdata);
+    void call(void *eventdata,EventType,Engine&);
 };
 
 } // namespace pipeworks

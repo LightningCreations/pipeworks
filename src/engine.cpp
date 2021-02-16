@@ -19,7 +19,7 @@ void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
 void Engine::start0() {
     m_renderer->open_window();
     while(m_running) {
-        fire_event(FRAME, nullptr); // No data for start-of-frame yet
+        fire_event(EventType::Frame, nullptr); // No data for start-of-frame yet
         if(m_pending_scene) {
             if(m_load_tasks.empty() && !m_active_load_threads) {
                 for(GameObject *obj : m_pending_scene->objects()) {
@@ -35,7 +35,7 @@ void Engine::start0() {
                 }
             }
         }
-        fire_event(FRAMEEND, nullptr); // No data for end-of-frame yet
+        fire_event(EventType::FrameEnd, nullptr); // No data for end-of-frame yet
         m_renderer->render_poll();
         if(m_renderer->close_requested()) m_running = false;
         m_renderer->sync(60); // 60 FPS default
@@ -121,12 +121,18 @@ void Engine::register_event(std::unique_ptr<Event> event) {
 
 void Engine::fire_event(EventType type, void *data) {
     for(Event e : m_events) {
-        if(type & e.m_type) e.call(data);
+        if((type & e.m_type)!=EventType{}) e.call(data,type,*this);
     }
 }
 
 Renderer& Engine::renderer() {
     return *m_renderer;
+}
+InputManager& Engine::input_manager(){
+    if(!this->m_inputMan){
+        this->m_inputMan = InputManager{*this};
+    }
+    return *this->m_inputMan;
 }
 
 }

@@ -22,7 +22,7 @@ int16_t shiprot = 90;
 
 const float DEG_TO_RAD = 180.0f / 3.1415926536f;
 
-void move_player_ship(void *obj, void *data) {
+void move_player_ship(void *obj, void *data,EventType,Engine& e) {
     Renderer &renderer = enginep->renderer();
     Sprite &ship = *((Sprite*) obj);
     StarfieldBackground &bg = *bgp;
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<std::string> ship_frames;
     Sprite ship(-0.2f, -0.2f, 1, 0.4f, 0.4f, ship_frames);
-    engine.register_event(std::unique_ptr<Event>(new Event(FRAME, &move_player_ship, &ship)));
+    engine.register_event(std::unique_ptr<Event>(new Event(EventType::Frame, &move_player_ship, &ship)));
     title_scene.add_object(&ship);
 
     StarfieldBackground bg(100000, engine); // farthest back

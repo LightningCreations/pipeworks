@@ -1,4 +1,5 @@
 #include <resourcemanager.hpp>
+#include <mutex>
 
 namespace pipeworks {
 

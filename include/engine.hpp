@@ -1,16 +1,10 @@
 #ifndef PW_ENGINE_HPP
 #define PW_ENGINE_HPP
 
-/// \brief Root namespace
-namespace pipeworks {
-
-class Engine;
-
-}
-
 #include "event.hpp"
 #include "scene.hpp"
 #include "renderer.hpp"
+#include "input.hpp"
 
 #include <atomic>
 #include <memory>
@@ -18,6 +12,7 @@ class Engine;
 #include <string>
 #include <thread>
 #include <vector>
+#include <optional>
 
 #define PW_VERSION "0.1.0"
 
@@ -40,6 +35,7 @@ class Engine {
     std::atomic_uint8_t m_active_load_threads;
     void load_resource(std::string resource);
     std::vector<Event> m_events;
+    std::optional<InputManager> m_inputMan;
   protected:
     /// \brief Deactivate Scene if it is active *without* notifying it.
     /// \param scene The Scene to deactivate.
@@ -113,6 +109,12 @@ class Engine {
     ///
     /// The Renderer contains the interfaces to drawing and getting input (currently), making it essential for most functions that access the Engine.
     Renderer& renderer();
+
+    /// \brief Gets the Input Manager
+    /// \pre This must be called either before the Engine is started, or on the Engine Thread.
+    ///
+    /// The Input Manager allows for synchronous handling of Key Inputs
+    InputManager& input_manager();
 };
 
 }
