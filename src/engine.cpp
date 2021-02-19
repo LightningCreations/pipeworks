@@ -6,7 +6,12 @@
 
 namespace pipeworks {
 
-Engine::Engine(std::unique_ptr<Renderer> renderer): m_renderer(std::move(renderer)), m_active_load_threads(0) {
+struct EventBuffer{
+    EventType type;
+    void* udata;
+};
+
+Engine::Engine(std::unique_ptr<Renderer> renderer): m_renderer(std::move(renderer)), m_active_load_threads(0), m_eventQueue{64*sizeof(EventBuffer)} {
     m_renderer->set_active_scene_list(&m_active_scenes);
     m_renderer->set_width(1280);
     m_renderer->set_height(720);
@@ -20,6 +25,9 @@ void Engine::start0() {
     m_renderer->open_window();
     while(m_running) {
         fire_event(EventType::Frame, nullptr); // No data for start-of-frame yet
+        EventBuffer buff;
+        while(this->m_eventQueue.get(buff))
+            this->fire_event0(buff.type,buff.udata);
         if(m_pending_scene) {
             if(m_load_tasks.empty() && !m_active_load_threads) {
                 for(GameObject *obj : m_pending_scene->objects()) {
@@ -119,11 +127,16 @@ void Engine::register_event(std::unique_ptr<Event> event) {
     m_events.push_back(*event);
 }
 
-void Engine::fire_event(EventType type, void *data) {
+void Engine::fire_event0(EventType type, void *data) {
     for(Event e : m_events) {
         if((type & e.m_type)!=EventType{}) e.call(data,type,*this);
     }
 }
+
+void Engine::fire_event(EventType type,void *data){
+    this->m_eventQueue.put(EventBuffer{type,data});
+}
+
 
 Renderer& Engine::renderer() {
     return *m_renderer;

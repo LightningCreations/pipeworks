@@ -4,9 +4,10 @@
 
 namespace pipeworks {
 
-static SDLManager g_sdlmanager;
+
 
 SDLManager *global_sdlmanager() {
+    static SDLManager g_sdlmanager;
     return &g_sdlmanager;
 }
 

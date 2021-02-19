@@ -13,6 +13,8 @@ if(PIPEWORKS_BUILD_DEMO AND NOT PIPEWORKS_BUILD_SDLRENDERER)
   message(FATAL_ERROR "Building the demo requires the SDL2 renderer; please check your configuration!")
 endif()
 
+add_subdirectory(3rdparty/ring-buffer)
+
 add_library(pipeworks
   src/engine.cpp include/engine.hpp
   src/event.cpp include/event.hpp
@@ -29,6 +31,7 @@ add_library(pipeworks
   src/whereami.c src/whereami.h
   src/input.cpp include/input.hpp
 )
+target_link_libraries(pipeworks PUBLIC ring_buffer)
 target_include_directories(pipeworks
   PUBLIC
     $<INSTALL_INTERFACE:include>

@@ -5,6 +5,7 @@
 #include "scene.hpp"
 #include "renderer.hpp"
 #include "input.hpp"
+#include <ring_buffer/ring_buffer.h>
 
 #include <atomic>
 #include <memory>
@@ -36,6 +37,8 @@ class Engine {
     void load_resource(std::string resource);
     std::vector<Event> m_events;
     std::optional<InputManager> m_inputMan;
+    Soft_Ring_Buffer m_eventQueue;
+    void fire_event0(EventType type, void *data);
   protected:
     /// \brief Deactivate Scene if it is active *without* notifying it.
     /// \param scene The Scene to deactivate.
