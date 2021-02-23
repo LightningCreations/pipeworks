@@ -7,6 +7,12 @@ ResourceManager g_resourcemanager;
 
 ResourceManager::ResourceManager() {}
 
+ResourceManager::~ResourceManager() {
+    for(const auto &[key, data] : m_loaded_imagedata) {
+        delete data;
+    }
+}
+
 ImageData &ResourceManager::image_data(const std::string &name) {
     std::shared_lock lock(m_access_mutex);
     return *m_loaded_imagedata.find(name)->second;

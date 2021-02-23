@@ -18,6 +18,8 @@ class ResourceManager {
   public:
     /// \brief Create a ResourceManager.
     ResourceManager();
+    /// \brief Deallocate loaded resources.
+    ~ResourceManager();
     /// \brief Get ImageData corresponding to a name.
     /// \param name The name of a file that the image was loaded from.
     /// \return The ImageData corresponding to the file.

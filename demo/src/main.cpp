@@ -52,7 +52,7 @@ void move_player_ship(void *obj, void *data,EventType,Engine& e) {
 
 int main(int argc, char *argv[]) {
     SDLRenderer renderer;
-    Engine engine{std::unique_ptr<Renderer>(&renderer)};
+    Engine engine{std::make_unique<SDLRenderer>(renderer)};
     enginep = &engine;
 
     Scene title_scene{};
