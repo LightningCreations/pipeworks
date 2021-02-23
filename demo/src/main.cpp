@@ -68,13 +68,13 @@ int main(int argc, char *argv[]) {
         ship_frames.push_back(formatter.str());
     }
 
-    Sprite ship(-0.2f, -0.2f, 1, 0.4f, 0.4f, ship_frames);
-    engine.register_event(std::unique_ptr<Event>(new Event(EventType::Frame, &move_player_ship, &ship)));
-    title_scene.add_object(&ship);
-
     StarfieldBackground bg(100000, engine); // farthest back
     bgp = &bg;
     title_scene.add_object(&bg);
+
+    Sprite ship(-0.2f, -0.2f, 1, 0.4f, 0.4f, ship_frames);
+    engine.register_event(std::unique_ptr<Event>(new Event(EventType::Frame, &move_player_ship, &ship)));
+    title_scene.add_object(&ship);
 
     engine.set_init_scene(std::make_unique<Scene>(title_scene));
 
