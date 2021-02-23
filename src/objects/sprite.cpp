@@ -34,7 +34,7 @@ void Sprite::render(Renderer &renderer) {
     // TODO: Prevent floating point imprecision aliasing (if possible to do without slowdown)
     for(uint32_t ix = 0; ix < iw; ix++) {
         for(uint32_t iy = 0; iy < ih; iy++) {
-            renderer.fill_rect(m_x + pw*ix, m_y + ph*iy, pw, ph,
+            renderer.fill_rect(m_x + pw*ix, m_y - ph*iy, pw, ph,
                 id[(ix+iy*iw)*4],
                 id[(ix+iy*iw)*4+1],
                 id[(ix+iy*iw)*4+2],

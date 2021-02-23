@@ -48,7 +48,7 @@ void StarfieldBackground::set_y(float y) {
 
 void StarfieldBackground::render(Renderer &renderer) {
     this->renderer = &renderer;
-    renderer.fill_rect(-2, -2, 4, 4, 0, 0, 0, 255); // Clear out
+    renderer.fill_rect(-2, 2, 4, 4, 0, 0, 0, 255); // Clear out
     for(int i = 0; i < STARFIELD_NUM_STARS; i++) {
         renderer.fill_rect(starx[i]/starz[i], stary[i]/starz[i], // Perspective divide
                            0, 0, // No width; always drawn as one pixel

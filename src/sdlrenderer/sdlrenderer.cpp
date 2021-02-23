@@ -31,6 +31,7 @@ static SDLRenderManager s_render_manager;
 
 static std::vector<Scene> s_engine_hasnt_passed_active_scenes_list_ub_prevention;
 SDLRenderer::SDLRenderer(): m_active_scenes(&s_engine_hasnt_passed_active_scenes_list_ub_prevention) {
+    std::fill_n(m_keys_down, sizeof(m_keys_down), false);
     s_render_manager.verify_active(); // Initialize video if it isn't initialized already
 }
 
@@ -122,7 +123,7 @@ void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t
     assert(width >= 0 && height >= 0 && "Please don't send me negative width/height for a rectangle, that's just not kind");
     // We're multiplying by height to not stretch the image. I'll try to write a thorough explanation later
     int32_t nx = static_cast<int32_t>(((x + m_xoa) * m_height)) / 2; if(nx >= static_cast<int32_t>(m_width)) return; // This can't possibly be a thread-safety issue, right?
-    int32_t ny = static_cast<int32_t>(((y + 1) * m_height)) / 2; if(ny >= static_cast<int32_t>(m_height)) return;    // ... right?
+    int32_t ny = static_cast<int32_t>(((-y + 1) * m_height)) / 2; if(ny >= static_cast<int32_t>(m_height)) return;   // ... right?
     int32_t nw = static_cast<int32_t>((width * m_height)) / 2;                                                       // I'm just going to hope it isn't...
     int32_t nh = static_cast<int32_t>((height * m_height)) / 2;                                                      // ... since otherwise I need to spend function calls.
 

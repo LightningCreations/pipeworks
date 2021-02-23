@@ -22,14 +22,14 @@ float shipx = 0, shipy = 0;
 float shipvx = 0, shipvy = 0; // Velocity X, velocity Y
 int16_t shiprot = 90;
 
-const float DEG_TO_RAD = 180.0f / 3.1415926536f;
+const float DEG_TO_RAD = 3.1415926536f / 180.0f;
 
 void move_player_ship(void *obj, void *data,EventType,Engine& e) {
     Renderer &renderer = enginep->renderer();
     Sprite &ship = *((Sprite*) obj);
     StarfieldBackground &bg = *bgp;
 
-    float accel = (renderer.key_down('d') - renderer.key_down('a')) * 0.001f;
+    float accel = (renderer.key_down('d') - renderer.key_down('a')) * 0.02f;
     int8_t rot = renderer.key_down('s') - renderer.key_down('w');
     shiprot += rot;
     if(shiprot < 0) shiprot = 0;
@@ -42,6 +42,12 @@ void move_player_ship(void *obj, void *data,EventType,Engine& e) {
 
     shipvx += ax;
     shipvy += ay;
+
+    float speedsq = shipvx*shipvx+shipvy*shipvy;
+    if(speedsq > 1) {
+        shipvx /= sqrt(speedsq);
+        shipvy /= sqrt(speedsq);
+    }
 
     shipx += shipvx;
     shipy += shipvy;
@@ -72,7 +78,7 @@ int main(int argc, char *argv[]) {
     bgp = &bg;
     title_scene.add_object(&bg);
 
-    Sprite ship(-0.2f, -0.2f, 1, 0.4f, 0.4f, ship_frames);
+    Sprite ship(-0.2f, 0.2f, 1, 0.4f, 0.4f, ship_frames);
     engine.register_event(std::unique_ptr<Event>(new Event(EventType::Frame, &move_player_ship, &ship)));
     title_scene.add_object(&ship);
 
