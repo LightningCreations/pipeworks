@@ -1,5 +1,7 @@
 #include <cmath>
+#include <iomanip>
 #include <memory>
+#include <sstream>
 
 #include <engine.hpp>
 #include <renderer.hpp>
@@ -56,11 +58,22 @@ int main(int argc, char *argv[]) {
     Scene title_scene{};
 
     std::vector<std::string> ship_frames;
+
+    for(int i = 0; i <= 180; i++) {
+        // Please let std::format be implemented soon...
+        // ship_frames.push_back(std::format("ship{:03}.png", i));
+        // Instead, we have to do this:
+        std::ostringstream formatter;
+        formatter << "ship" << std::setw(3) << std::setfill('0') << i << ".png";
+        ship_frames.push_back(formatter.str());
+    }
+
     Sprite ship(-0.2f, -0.2f, 1, 0.4f, 0.4f, ship_frames);
     engine.register_event(std::unique_ptr<Event>(new Event(EventType::Frame, &move_player_ship, &ship)));
     title_scene.add_object(&ship);
 
     StarfieldBackground bg(100000, engine); // farthest back
+    bgp = &bg;
     title_scene.add_object(&bg);
 
     engine.set_init_scene(std::make_unique<Scene>(title_scene));
