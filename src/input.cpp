@@ -6,7 +6,8 @@
 namespace pipeworks {
     InputManager::InputManager(Engine &e) {
         e.register_event(std::make_unique<Event>(EventType::KeyUp | EventType::KeyDown,
-            [](void *udata, void *event, EventType t, Engine &_engine) {
+            [](void *udata, void *event, EventType t, Engine &engine) {
+                (void) engine;
                 auto self = (InputManager*) udata;
                 auto key = (KeyCode*) event;
                 if(t == EventType::KeyUp)
