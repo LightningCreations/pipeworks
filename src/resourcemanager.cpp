@@ -18,7 +18,7 @@ ImageData &ResourceManager::image_data(const std::string &name) {
     return *m_loaded_imagedata.find(name)->second;
 }
 
-bool ResourceManager::image_data_loaded(const std::string &name) {
+bool ResourceManager::is_image_data_loaded(const std::string &name) {
     std::shared_lock lock(m_access_mutex);
     return m_loaded_imagedata.contains(name);
 }

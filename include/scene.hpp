@@ -56,7 +56,7 @@ class Scene {
     /// \brief Determine if the Scene is loaded.
     /// \return `true` if every GameObject in the Scene is loaded, `false` otherwise.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
-    bool loaded(); // Checks every object
+    bool is_loaded(); // Checks every object
 };
 
 }

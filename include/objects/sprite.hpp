@@ -47,7 +47,7 @@ class Sprite : public GameObject {
     Sprite(float x, float y, float z, float width, float height, std::vector<std::string> resources);
     void render(Renderer&);
     void finished_loading();
-    bool loaded();
+    bool is_loaded();
     std::vector<std::string> loadable_resources();
     /// \brief Set the current animation frame.
     /// \param frame The animation frame to start rendering.

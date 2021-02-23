@@ -32,7 +32,7 @@ class ResourceManager {
     /// \return `true` if the image is loaded, `false` otherwise.
     ///
     /// This function is thread-safe.
-    bool image_data_loaded(const std::string &name);
+    bool is_image_data_loaded(const std::string &name);
     /// \brief Add loaded ImageData corresponding to a name.
     /// \param name The name of a file that the image was loaded from.
     /// \param imagedata The ImageData corresponding to the file.

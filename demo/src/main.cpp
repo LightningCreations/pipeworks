@@ -29,8 +29,8 @@ void move_player_ship(void *obj, void *data,EventType,Engine& e) {
     Sprite &ship = *((Sprite*) obj);
     StarfieldBackground &bg = *bgp;
 
-    float accel = (renderer.key_down('d') - renderer.key_down('a')) * 0.02f;
-    int8_t rot = renderer.key_down('s') - renderer.key_down('w');
+    float accel = (renderer.is_key_down('d') - renderer.is_key_down('a')) * 0.02f;
+    int8_t rot = renderer.is_key_down('s') - renderer.is_key_down('w');
     shiprot += rot;
     if(shiprot < 0) shiprot = 0;
     if(shiprot > 180) shiprot = 180;

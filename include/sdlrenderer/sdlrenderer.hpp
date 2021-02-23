@@ -30,13 +30,13 @@ class SDLRenderer : public Renderer {
     void set_height(uint32_t);
     void open_window();
     void close_window();
-    bool close_requested();
+    bool is_close_requested();
     void render_poll();
     void sync(uint32_t);
     void fill_rect(float x, float y, float w, float h, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
     uint32_t width();
     uint32_t height();
-    bool key_down(char c);
+    bool is_key_down(char c);
 };
 
 }

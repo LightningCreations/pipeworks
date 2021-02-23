@@ -58,7 +58,7 @@ void SDLRenderer::close_window() {
     m_window = nullptr;
 }
 
-bool SDLRenderer::close_requested() {
+bool SDLRenderer::is_close_requested() {
     return m_close_requested;
 }
 
@@ -146,7 +146,7 @@ void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t
     }
 }
 
-bool SDLRenderer::key_down(char c) {
+bool SDLRenderer::is_key_down(char c) {
     return m_keys_down[c];
 }
 

@@ -79,7 +79,7 @@ class Engine {
     /// For waiting in the main thread, \ref join() should be used instead.
     ///
     /// This may be called from any thread.
-    bool running();
+    bool is_running();
     /// \brief Wait for the Engine thread to finish.
     /// \pre Calling this from the Engine thread results in undefined behavior.
     ///

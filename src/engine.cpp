@@ -45,7 +45,7 @@ void Engine::start0() {
         }
         fire_event(EventType::FrameEnd, nullptr); // No data for end-of-frame yet
         m_renderer->render_poll();
-        if(m_renderer->close_requested()) m_running = false;
+        if(m_renderer->is_close_requested()) m_running = false;
         m_renderer->sync(60); // 60 FPS default
     }
     m_renderer->close_window();
@@ -54,7 +54,7 @@ void Engine::start0() {
 void Engine::load_resource(std::string resource) {
     // TODO: Not all resources are images.
     // ... but right now, they are.
-    if(g_resourcemanager.image_data_loaded(resource)) {
+    if(g_resourcemanager.is_image_data_loaded(resource)) {
         m_active_load_threads--;
         return;
     }
@@ -89,12 +89,12 @@ void Engine::join() {
     m_engine_thread.join();
 }
 
-bool Engine::running() {
+bool Engine::is_running() {
     return m_running;
 }
 
 void Engine::activate_scene(Scene &scene) {
-    if(scene.loaded()) {
+    if(scene.is_loaded()) {
         deactivate_scene0(scene); // Deactivate the scene (without notification) if it already exists; otherwise do nothing
         m_active_scenes.push_back(scene);
         scene.activate();

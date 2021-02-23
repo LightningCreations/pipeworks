@@ -1,12 +1,13 @@
-#ifndef INPUT_HPP_2021_02_15_16_08_32
-#define INPUT_HPP_2021_02_15_16_08_32
+#ifndef PW_INPUT_HPP
+#define PW_INPUT_HPP
 
 #include <unordered_set>
 #include <functional>
 #include <type_traits>
 
-namespace pipeworks{
-    enum class KeyCode{
+namespace pipeworks {
+    /// \brief Represents a key being pressed
+    enum class KeyCode {
         Backspace = '\010',
         Tab = '\t',
         Enter = '\n',
@@ -83,21 +84,17 @@ namespace pipeworks{
         Delete = '\127'
     };
     class Engine;
-    /**
-     * \brief A type used to access synchronous input state from the engine.
-     */
+    /// \brief A type used to access synchronous input state from the engine.
     struct InputManager{
-    private:
+      private:
         std::unordered_set<KeyCode> keys;
         friend class Engine;
         InputManager(Engine& e);
-    public:
-        /**
-         * \brief checks if the given key is pressed
-         * 
-         * \pre Must only be called from the Engine Thread. 
-         */ 
-        bool key_pressed(KeyCode code);
+      public:
+        /// \brief checks if the given key is pressed
+        /// \param code The code to check
+        /// \pre Must only be called from the Engine Thread.
+        bool is_key_pressed(KeyCode code);
     };
 }
 

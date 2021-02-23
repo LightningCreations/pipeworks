@@ -39,7 +39,7 @@ class Renderer {
     /// \brief Determine if the user or OS has requested the window (or other render target) to close.
     /// \return `true` if the window (or other render target) was requested to be closed, `false` otherwise.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
-    virtual bool close_requested() = 0;
+    virtual bool is_close_requested() = 0;
     /// \brief Render, then get input for the next frame.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
     ///
@@ -84,15 +84,15 @@ class Renderer {
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
     ///
     /// This API is preemptively deprecated in favor of an upcoming API.
-    virtual bool key_down(char c) = 0;
+    virtual bool is_key_down(char c) = 0;
     /// \brief Determine if a specific (wide) character is pressed.
     /// \return `true` if the key is down, `false` otherwise.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
     ///
     /// This API is preemptively deprecated in favor of an upcoming API.
-    virtual bool key_down(wchar_t c) { // If the underlying implementation doesn't support wide characters, we'll do it for them
+    virtual bool is_key_down(wchar_t c) { // If the underlying implementation doesn't support wide characters, we'll do it for them
         if(c > 0xff) return 0;
-        return key_down(c);
+        return is_key_down(c);
     }
 };
 

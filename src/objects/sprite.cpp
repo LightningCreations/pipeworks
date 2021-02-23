@@ -50,7 +50,7 @@ void Sprite::finished_loading() {
     m_loaded = true;
 }
 
-bool Sprite::loaded() {
+bool Sprite::is_loaded() {
     return m_loaded;
 }
 

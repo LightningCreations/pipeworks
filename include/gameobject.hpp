@@ -35,7 +35,7 @@ class GameObject {
     /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
     ///
     /// The base implementation has no resources to load, therefore it always returns `true`.
-    virtual bool loaded() { return true; }
+    virtual bool is_loaded() { return true; }
     /// \brief Get what resources may need to be loaded.
     /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
     ///

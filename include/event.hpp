@@ -37,8 +37,6 @@ struct Event {
     EventType m_type;
     friend class Engine;
   public:
-    /// \brief All events that can be responded to, as a bitmask.
-    
     /// \brief Create a new event listener.
     /// \param type The type(s) of event to react to.
     /// \param callback The function to be called upon the event triggering.
@@ -47,12 +45,14 @@ struct Event {
     /// Multiple events can be reacted to with the same function by ORing together multiple values of EventType
     ///
     /// The callback takes two `void*` as parameters. The first is the user-defined data, while the second is an event-specific data structure.
+    /// The other two fields should be self-explanatory: The EventType field passes the event type to repond to, and the Engine& field passes a copy of the Engine.
     Event(EventType type, void(*callback)(void*,void*,EventType,Engine&), void *data);
-    
     /// \brief Call the event listener.
     /// \param eventdata The event-specific data.
+    /// \param type The type of event to react to (useful for handlers that repond to multiple events).
+    /// \param engine The running engine.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
-    void call(void *eventdata,EventType,Engine&);
+    void call(void *eventdata, EventType type, Engine &engine);
 };
 
 } // namespace pipeworks
