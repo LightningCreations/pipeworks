@@ -19,9 +19,6 @@ namespace pipeworks {
 /// \brief A movable, resizable object.
 class Sprite : public GameObject {
   private:
-    float m_x;
-    float m_y;
-    // float m_z; // Since depth sorting doesn't exist yet, neither does a reason for a Z coordinate.
     float m_width;
     float m_height;
     std::vector<ImageData> m_image_data;

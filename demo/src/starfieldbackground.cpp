@@ -8,8 +8,7 @@ void call_scroll(void *obj, void *data,pipeworks::EventType,pipeworks::Engine&) 
     ((StarfieldBackground*) obj)->scroll(data);
 }
 
-StarfieldBackground::StarfieldBackground(float z, Engine &engine) noexcept: x(0), y(0) {
-    (void) z; // This is sorting Z, not star Z. And there is no sorting.
+StarfieldBackground::StarfieldBackground(float z, Engine &engine) noexcept: GameObject(0, 0, z) {
     std::random_device rd; // Doesn't need to be cryptographically seeded or anything
     std::mt19937 gen(rd()); // The actual algorithm doesn't need to be cryptographic either
     std::uniform_real_distribution<float> random(-1.f,1.f);
@@ -23,8 +22,8 @@ StarfieldBackground::StarfieldBackground(float z, Engine &engine) noexcept: x(0)
 
 void StarfieldBackground::scroll(void *eventdata) {
     if(!renderer) return; // Because currently the renderer handles key state. @InfernoDeity please fix
-    float xoff = x - prev_x;
-    float yoff = y - prev_y;
+    float xoff = x() - prev_x;
+    float yoff = y() - prev_y;
     Renderer &renderer = *this->renderer;
     for(int i = 0; i < STARFIELD_NUM_STARS; i++) {
         starx[i] += xoff;
@@ -34,16 +33,8 @@ void StarfieldBackground::scroll(void *eventdata) {
         if(stary[i]/starz[i] >= 1) stary[i] -= starz[i] * 2; // * 2 because we're going from 1 to -1
         if(stary[i]/starz[i] < -1) stary[i] += starz[i] * 2;
     }
-    prev_x = x;
-    prev_y = y;
-}
-
-void StarfieldBackground::set_x(float x) {
-    this->x = x;
-}
-
-void StarfieldBackground::set_y(float y) {
-    this->y = y;
+    prev_x = x();
+    prev_y = y();
 }
 
 void StarfieldBackground::render(Renderer &renderer) {

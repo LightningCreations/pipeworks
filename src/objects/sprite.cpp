@@ -5,14 +5,10 @@
 namespace pipeworks {
 
 Sprite::Sprite(float x, float y, float z, float width, float height, std::vector<ImageData> data):
-    m_x(x), m_y(y), m_width(width), m_height(height), m_image_data(data), m_loaded(true), m_frame(0) {
-    (void) z; // Unused until we have depth sorting
-}
+    GameObject(x, y, z), m_width(width), m_height(height), m_image_data(data), m_loaded(true), m_frame(0) {}
 
 Sprite::Sprite(float x, float y, float z, float width, float height, std::vector<std::string> resources):
-    m_x(x), m_y(y), m_width(width), m_height(height), m_resources(resources), m_loaded(false), m_frame(0) {
-    (void) z;
-}
+    GameObject(x, y, z), m_width(width), m_height(height), m_resources(resources), m_loaded(false), m_frame(0) {}
 
 uint16_t Sprite::frame() {
     return m_frame;
@@ -34,7 +30,7 @@ void Sprite::render(Renderer &renderer) {
     // TODO: Prevent floating point imprecision aliasing (if possible to do without slowdown)
     for(uint32_t ix = 0; ix < iw; ix++) {
         for(uint32_t iy = 0; iy < ih; iy++) {
-            renderer.fill_rect(m_x + pw*ix, m_y - ph*iy, pw, ph,
+            renderer.fill_rect(x() + pw*ix, y() - ph*iy, pw, ph,
                 id[(ix+iy*iw)*4],
                 id[(ix+iy*iw)*4+1],
                 id[(ix+iy*iw)*4+2],

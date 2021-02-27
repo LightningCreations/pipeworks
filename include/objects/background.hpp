@@ -15,10 +15,6 @@ namespace pipeworks {
 ///
 /// This is a very incomplete class; as such, expect the API to be incredibly unstable.
 class Background : public GameObject {
-  private:
-    float m_x;
-    float m_y;
-    // float m_z; // Since depth sorting doesn't exist yet, neither does a reason for a Z coordinate.
   public:
     /// \brief Create a new Background.
     /// \param x The horizontal position of the Background

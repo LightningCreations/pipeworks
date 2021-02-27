@@ -11,13 +11,24 @@ class GameObject;
 #include <vector>
 
 #include "renderer.hpp"
+#include "scene.hpp"
 
 namespace pipeworks {
 
 /// \brief An object to be represented in the Engine.
 class GameObject {
+  protected:
+    float m_x;
+    float m_y;
+    // float m_z; // Unused
+    const Scene *m_scene;
   public:
     virtual ~GameObject() = 0;
+    /// \brief Create a new GameObject with a given position.
+    /// \param x The X position of the object.
+    /// \param y The Y position of the object.
+    /// \param z The Z position of the object.
+    GameObject(float x, float y, float z);
     /// \brief Render this object.
     /// \param renderer The renderer to use.
     /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
@@ -40,7 +51,29 @@ class GameObject {
     /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
     ///
     /// The base implementation has no resources to load, therefore it always returns an empty vector.
-    virtual std::vector<std::string> loadable_resources() { return std::vector<std::string>(); } // Called from engine thread to determine what resources need to be loaded.
+    virtual std::vector<std::string> loadable_resources() { return std::vector<std::string>(); }
+    /// \brief Get the current (shifted) X position of the object
+    /// \return The X position of this object, shifted by the active camera
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
+    ///
+    /// Note: For objects that disregard the camera position, such as HUD, this function should be overriden with one that simply returns m_x.
+    virtual float x() const;
+    /// \brief Get the current (shifted) Y position of the object
+    /// \return The Y position of this object, shifted by the active camera
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
+    ///
+    /// Note: For objects that disregard the camera position, such as HUD, this function should be overriden with one that simply returns m_y.
+    virtual float y() const;
+    /// \brief Set the X position of the object
+    /// \param x The new X position of this object in world space
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
+    void set_x(float x);
+    /// \brief Set the Y position of the object
+    /// \param y The new Y position of this object in world space
+    /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
+    void set_y(float y);
+    /// \brief Tell the object what scene it's in
+    void bind_scene(const Scene &scene);
 };
 
 }

@@ -14,9 +14,6 @@ class StarfieldBackground: public GameObject {
   private:
     float prev_x;
     float prev_y;
-    float x;
-    float y;
-    // float z;
     float starx[STARFIELD_NUM_STARS];
     float stary[STARFIELD_NUM_STARS];
     float starz[STARFIELD_NUM_STARS];
@@ -25,8 +22,6 @@ class StarfieldBackground: public GameObject {
     StarfieldBackground(float z, Engine &engine) noexcept;
     void render(Renderer&);
     void scroll(void*);
-    void set_x(float x);
-    void set_y(float y);
 };
 
 }
