@@ -1,7 +1,4 @@
-#include <cmath>
-#include <iomanip>
 #include <memory>
-#include <sstream>
 
 #include <engine.hpp>
 #include <renderer.hpp>
@@ -9,81 +6,36 @@
 #include <objects/sprite.hpp>
 
 #include "starfieldbackground.hpp"
+#include "ship.hpp"
 
 #include <sdlrenderer.hpp>
 
 using namespace pipeworks;
 using namespace fotc;
 
-Engine *enginep;
-Scene *scenep;
+Ship *player_shipp;
 
-float shipx = 0, shipy = 0;
-float shipvx = 0, shipvy = 0; // Velocity X, velocity Y
-int16_t shiprot = 90;
-
-const float DEG_TO_RAD = 3.1415926536f / 180.0f;
-
-void move_player_ship(void *obj, void *data, EventType event_type, Engine &engine) {
-    Renderer &renderer = enginep->renderer();
-    Sprite &ship = *((Sprite*) obj);
-    Scene &scene = *scenep;
-
-    float accel = (renderer.is_key_down('d') - renderer.is_key_down('a')) * 0.02f;
-    int8_t rot = renderer.is_key_down('s') - renderer.is_key_down('w');
-    shiprot += rot;
-    if(shiprot < 0) shiprot = 0;
-    if(shiprot > 180) shiprot = 180;
-    ship.set_frame(shiprot);
-
-    float angle = shiprot * DEG_TO_RAD;
-    float ax = sin(angle) * accel;
-    float ay = cos(angle) * accel;
-
-    shipvx += ax;
-    shipvy += ay;
-
-    float speedsq = shipvx*shipvx+shipvy*shipvy;
-    if(speedsq > 1) {
-        shipvx /= sqrt(speedsq);
-        shipvy /= sqrt(speedsq);
-    }
-
-    shipx += shipvx;
-    shipy += shipvy;
-
-    ship.set_x(shipx-0.2f);
-    ship.set_y(shipy+0.2f);
-
-    scene.set_camera_x(-shipx);
-    scene.set_camera_y(-shipy);
+void update_camera(void *obj, void *data, EventType event_type, Engine &engine) {
+    Scene &scene = *((Scene*) obj);
+    scene.set_camera_x(-player_shipp->world_x());
+    scene.set_camera_y(-player_shipp->world_y());
 }
 
 int main(int argc, char *argv[]) {
     SDLRenderer renderer;
     Engine engine{std::make_unique<SDLRenderer>(renderer)};
-    enginep = &engine;
-
     Scene scene{};
-    scenep = &scene;
 
     std::vector<std::string> ship_frames;
-
-    for(int i = 0; i <= 180; i++) {
-        // Please let std::format be implemented soon...
-        // ship_frames.push_back(std::format("ship{:03}.png", i));
-        // Instead, we have to do this:
-        std::ostringstream formatter;
-        formatter << "ship" << std::setw(3) << std::setfill('0') << i << ".png";
-        ship_frames.push_back(formatter.str());
-    }
 
     StarfieldBackground bg(100000, engine); // farthest back
     scene.add_object(&bg);
 
-    Sprite ship(-0.2f, 0.2f, 1, 0.4f, 0.4f, ship_frames);
-    engine.register_event(std::unique_ptr<Event>(new Event(EventType::Frame, &move_player_ship, &ship)));
-    scene.add_object(&ship);
+    Ship player_ship(0, 0, 1, "ship", engine, true);
+    player_shipp = &player_ship;
+    scene.add_object(&player_ship);
+
+    engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &update_camera, &scene)));
 
     engine.set_init_scene(std::make_unique<Scene>(scene));
 

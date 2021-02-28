@@ -25,6 +25,7 @@ add_library(pipeworks
   src/resourcemanager.cpp include/resourcemanager.hpp
 
   src/objects/background.cpp include/objects/background.hpp
+  src/objects/emitter.cpp include/objects/emitter.hpp
   src/objects/sprite.cpp include/objects/sprite.hpp
 
   src/stb_image.c 3rdparty/stb/stb_image.h

@@ -26,11 +26,13 @@ void Sprite::render(Renderer &renderer) {
     const uint32_t ih = image.height();
     const uint8_t *id = image.data();
     float pw = m_width/iw, ph = m_height/ih; // Width/height of one image pixel
+    float xadj = x() - m_width/2;
+    float yadj = y() + m_height/2;
     // TODO: Optimize for images substantially larger than size on screen
     // TODO: Prevent floating point imprecision aliasing (if possible to do without slowdown)
     for(uint32_t ix = 0; ix < iw; ix++) {
         for(uint32_t iy = 0; iy < ih; iy++) {
-            renderer.fill_rect(x() + pw*ix, y() - ph*iy, pw, ph,
+            renderer.fill_rect(xadj + pw*ix, yadj - ph*iy, pw, ph,
                 id[(ix+iy*iw)*4],
                 id[(ix+iy*iw)*4+1],
                 id[(ix+iy*iw)*4+2],

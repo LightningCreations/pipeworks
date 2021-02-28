@@ -2,6 +2,7 @@ project(fotc CXX)
 
 add_executable(fotc
     src/main.cpp
+    src/ship.cpp src/ship.hpp
     src/starfieldbackground.cpp src/starfieldbackground.hpp
 )
 add_custom_command(TARGET fotc POST_BUILD
