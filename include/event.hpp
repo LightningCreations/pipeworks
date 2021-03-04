@@ -15,6 +15,10 @@ enum class EventType {
     KeyDown = 4,
     /// \brief Key has just been released
     KeyUp = 8,
+    /// \brief (Virtual) Key has just been pressed, or is being repeated by the OS
+    VKeyDown = 0x10,
+    /// \brief (Virtual) Key has just been released
+    VKeyUp = 0x20,
     /// \brief Listen to all events
     All = 0xF
 };
