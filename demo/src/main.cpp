@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     StarfieldBackground bg(100000, engine); // farthest back
     scene.add_object(&bg);
 
-    Ship player_ship(0, 0, 1, "ship", engine, true);
+    Ship player_ship(0, 0, 1, "ship", engine, scene, true);
     player_shipp = &player_ship;
     scene.add_object(&player_ship);
 
