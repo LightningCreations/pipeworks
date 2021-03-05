@@ -47,7 +47,7 @@ void Emitter::render(Renderer &renderer) {
         if(p.timer >= m_lifetime) {
             itr = m_particles.erase(itr);
         } else {
-            renderer.fill_rect(p.x + xoff, p.y + yoff, 0, 0, p.r*255, p.g*255, p.b*255, 255);
+            renderer.fill_rect(p.x + xoff, p.y + yoff, 0, 0, (uint8_t) (p.r*255), (uint8_t) (p.g*255), (uint8_t) (p.b*255), 255);
             p.x += p.dx * delta;
             p.y += p.dy * delta;
             p.r += p.dr * delta;
