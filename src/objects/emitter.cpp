@@ -14,21 +14,21 @@ void Emitter::set_enabled(bool enabled) {
 
 void Emitter::render(Renderer &renderer) {
     if(m_enabled) {
-        std::uniform_real_distribution sx(0,m_posx.sv);
-        std::uniform_real_distribution sdx(0,m_posx.sdv);
-        std::uniform_real_distribution sddx(0,m_posx.sddv);
-        std::uniform_real_distribution sy(0,m_posy.sv);
-        std::uniform_real_distribution sdy(0,m_posy.sdv);
-        std::uniform_real_distribution sddy(0,m_posy.sddv);
-        std::uniform_real_distribution sr(0,m_r.sv);
-        std::uniform_real_distribution sdr(0,m_r.sdv);
-        std::uniform_real_distribution sddr(0,m_r.sddv);
-        std::uniform_real_distribution sg(0,m_g.sv);
-        std::uniform_real_distribution sdg(0,m_g.sdv);
-        std::uniform_real_distribution sddg(0,m_g.sddv);
-        std::uniform_real_distribution sb(0,m_b.sv);
-        std::uniform_real_distribution sdb(0,m_b.sdv);
-        std::uniform_real_distribution sddb(0,m_b.sddv);
+        std::uniform_real_distribution sx(0.f,m_posx.sv);
+        std::uniform_real_distribution sdx(0.f,m_posx.sdv);
+        std::uniform_real_distribution sddx(0.f,m_posx.sddv);
+        std::uniform_real_distribution sy(0.f,m_posy.sv);
+        std::uniform_real_distribution sdy(0.f,m_posy.sdv);
+        std::uniform_real_distribution sddy(0.f,m_posy.sddv);
+        std::uniform_real_distribution sr(0.f,m_r.sv);
+        std::uniform_real_distribution sdr(0.f,m_r.sdv);
+        std::uniform_real_distribution sddr(0.f,m_r.sddv);
+        std::uniform_real_distribution sg(0.f,m_g.sv);
+        std::uniform_real_distribution sdg(0.f,m_g.sdv);
+        std::uniform_real_distribution sddg(0.f,m_g.sddv);
+        std::uniform_real_distribution sb(0.f,m_b.sv);
+        std::uniform_real_distribution sdb(0.f,m_b.sdv);
+        std::uniform_real_distribution sddb(0.f,m_b.sddv);
         m_particles.push_back(Particle{
             0,
             m_posx.v+m_x+sx(m_rng)-m_posx.sv/2, m_posx.dv+sdx(m_rng)-m_posx.sdv/2, m_posx.ddv+sddx(m_rng)-m_posx.sddv/2,

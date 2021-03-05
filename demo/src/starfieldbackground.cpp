@@ -8,7 +8,7 @@ void call_scroll(void *obj, void *data,pipeworks::EventType,pipeworks::Engine&) 
     ((StarfieldBackground*) obj)->scroll(data);
 }
 
-StarfieldBackground::StarfieldBackground(float z, Engine &engine) noexcept: GameObject(0, 0, z) {
+StarfieldBackground::StarfieldBackground(float z, Engine &engine) noexcept: GameObject(0, 0, z), prev_x(0), prev_y(0) {
     std::random_device rd; // Doesn't need to be cryptographically seeded or anything
     std::mt19937 gen(rd()); // The actual algorithm doesn't need to be cryptographic either
     std::uniform_real_distribution<float> random(-1.f,1.f);
@@ -21,7 +21,6 @@ StarfieldBackground::StarfieldBackground(float z, Engine &engine) noexcept: Game
 }
 
 void StarfieldBackground::scroll(void *eventdata) {
-    if(!renderer) return; // Because currently the renderer handles key state. @InfernoDeity please fix
     float xoff = x() - prev_x;
     float yoff = y() - prev_y;
     Renderer &renderer = *this->renderer;

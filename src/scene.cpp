@@ -2,7 +2,7 @@
 
 namespace pipeworks {
 
-Scene::Scene() {
+Scene::Scene(): m_camera_x(0), m_camera_y(0) {
     static uint32_t s_max_scene_id = 0;
     s_max_scene_id++;
     m_id = s_max_scene_id;
