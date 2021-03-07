@@ -25,11 +25,13 @@ struct ParticleParameter {
 struct Particle {
     float timer;
     float x;
-    float dx;
-    float ddx;
     float y;
-    float dy;
-    float ddy;
+    float v;
+    float dv;
+    float ddv;
+    float t;
+    float dt;
+    float ddt;
     float r;
     float dr;
     float ddr;
@@ -45,8 +47,8 @@ class Emitter : public GameObject {
   private:
     bool m_enabled;
     float m_lifetime;
-    ParticleParameter m_posx;
-    ParticleParameter m_posy;
+    ParticleParameter m_v;
+    ParticleParameter m_t;
     ParticleParameter m_r;
     ParticleParameter m_g;
     ParticleParameter m_b;
@@ -55,11 +57,11 @@ class Emitter : public GameObject {
   public:
     /// \brief Create a new emitter
     Emitter(float x, float y, float z,
-        float lifetime, ParticleParameter posx, ParticleParameter posy, ParticleParameter r, ParticleParameter g, ParticleParameter b);
+        float lifetime, ParticleParameter v, ParticleParameter t, ParticleParameter r, ParticleParameter g, ParticleParameter b);
     /// \brief Enable or disable the emitter
     void set_enabled(bool enabled);
-    void set_posx(ParticleParameter);
-    void set_posy(ParticleParameter);
+    void set_v(ParticleParameter);
+    void set_t(ParticleParameter);
     void set_r(ParticleParameter);
     void set_g(ParticleParameter);
     void set_b(ParticleParameter);

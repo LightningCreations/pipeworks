@@ -2,6 +2,8 @@
 
 namespace pipeworks {
 
+std::vector<std::string> GameObject::empty_resource_list;
+
 GameObject::GameObject(float x, float y, float z): m_x(x), m_y(y), m_scene(nullptr) {
     (void) z;
 }

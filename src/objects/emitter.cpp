@@ -1,10 +1,11 @@
+#include <cmath>
 #include <objects/emitter.hpp>
 
 namespace pipeworks {
 
 Emitter::Emitter(float x, float y, float z,
-    float lifetime, ParticleParameter posx, ParticleParameter posy, ParticleParameter r, ParticleParameter g, ParticleParameter b):
-    GameObject(x, y, z), m_enabled(false), m_lifetime(lifetime), m_posx(posx), m_posy(posy), m_r(r), m_g(g), m_b(b),
+    float lifetime, ParticleParameter v, ParticleParameter t, ParticleParameter r, ParticleParameter g, ParticleParameter b):
+    GameObject(x, y, z), m_enabled(false), m_lifetime(lifetime), m_v(v), m_t(t), m_r(r), m_g(g), m_b(b),
     m_rng(0) {} // Deterministically seeded for no good reason.
 // Actually, there is a good reason: Testing in the future will want deterministic results.
 
@@ -14,12 +15,12 @@ void Emitter::set_enabled(bool enabled) {
 
 void Emitter::render(Renderer &renderer) {
     if(m_enabled) {
-        std::uniform_real_distribution sx(0.f,m_posx.sv);
-        std::uniform_real_distribution sdx(0.f,m_posx.sdv);
-        std::uniform_real_distribution sddx(0.f,m_posx.sddv);
-        std::uniform_real_distribution sy(0.f,m_posy.sv);
-        std::uniform_real_distribution sdy(0.f,m_posy.sdv);
-        std::uniform_real_distribution sddy(0.f,m_posy.sddv);
+        std::uniform_real_distribution sv(0.f,m_v.sv);
+        std::uniform_real_distribution sdv(0.f,m_v.sdv);
+        std::uniform_real_distribution sddv(0.f,m_v.sddv);
+        std::uniform_real_distribution st(0.f,m_t.sv);
+        std::uniform_real_distribution sdt(0.f,m_t.sdv);
+        std::uniform_real_distribution sddt(0.f,m_t.sddv);
         std::uniform_real_distribution sr(0.f,m_r.sv);
         std::uniform_real_distribution sdr(0.f,m_r.sdv);
         std::uniform_real_distribution sddr(0.f,m_r.sddv);
@@ -30,9 +31,9 @@ void Emitter::render(Renderer &renderer) {
         std::uniform_real_distribution sdb(0.f,m_b.sdv);
         std::uniform_real_distribution sddb(0.f,m_b.sddv);
         m_particles.push_back(Particle{
-            0,
-            m_posx.v+m_x+sx(m_rng)-m_posx.sv/2, m_posx.dv+sdx(m_rng)-m_posx.sdv/2, m_posx.ddv+sddx(m_rng)-m_posx.sddv/2,
-            m_posy.v+m_y+sy(m_rng)-m_posy.sv/2, m_posy.dv+sdy(m_rng)-m_posy.sdv/2, m_posy.ddv+sddy(m_rng)-m_posy.sddv/2,
+            0, m_x, m_y,
+            m_v.v+sv(m_rng)-m_v.sv/2, m_v.dv+sdv(m_rng)-m_v.sdv/2, m_v.ddv+sddv(m_rng)-m_v.sddv/2,
+            m_t.v+st(m_rng)-m_t.sv/2, m_t.dv+sdt(m_rng)-m_t.sdv/2, m_t.ddv+sddt(m_rng)-m_t.sddv/2,
             m_r.v+sr(m_rng)-m_r.sv/2, m_r.dv+sdr(m_rng)-m_r.sdv/2, m_r.ddv+sddr(m_rng)-m_r.sddv/2,
             m_g.v+sg(m_rng)-m_g.sv/2, m_g.dv+sdg(m_rng)-m_g.sdv/2, m_g.ddv+sddg(m_rng)-m_g.sddv/2,
             m_b.v+sb(m_rng)-m_b.sv/2, m_b.dv+sdb(m_rng)-m_b.sdv/2, m_b.ddv+sddb(m_rng)-m_b.sddv/2
@@ -48,13 +49,15 @@ void Emitter::render(Renderer &renderer) {
             itr = m_particles.erase(itr);
         } else {
             renderer.fill_rect(p.x + xoff, p.y + yoff, 0, 0, (uint8_t) (p.r*255), (uint8_t) (p.g*255), (uint8_t) (p.b*255), 255);
-            p.x += p.dx * delta;
-            p.y += p.dy * delta;
+            p.x += p.v * cos(p.t) * delta;
+            p.y += p.v * sin(p.t) * delta;
+            p.v += p.dv * delta;
+            p.t += p.dt * delta;
             p.r += p.dr * delta;
             p.g += p.dg * delta;
             p.b += p.db * delta;
-            p.dx += p.ddx * delta;
-            p.dy += p.ddy * delta;
+            p.dv += p.ddv * delta;
+            p.dt += p.ddt * delta;
             p.dr += p.ddr * delta;
             p.dg += p.ddg * delta;
             p.db += p.ddb * delta;
@@ -63,12 +66,12 @@ void Emitter::render(Renderer &renderer) {
     }
 }
 
-void Emitter::set_posx(ParticleParameter posx) {
-    m_posx = posx;
+void Emitter::set_v(ParticleParameter v) {
+    m_v = v;
 }
 
-void Emitter::set_posy(ParticleParameter posy) {
-    m_posy = posy;
+void Emitter::set_t(ParticleParameter t) {
+    m_t = t;
 }
 
 void Emitter::set_r(ParticleParameter r) {

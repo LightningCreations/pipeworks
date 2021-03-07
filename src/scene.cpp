@@ -16,7 +16,7 @@ void Scene::activate() {}
 
 void Scene::deactivate() {}
 
-std::vector<GameObject*> Scene::objects() const {
+const std::vector<GameObject*>& Scene::objects() const {
     return m_objects;
 }
 

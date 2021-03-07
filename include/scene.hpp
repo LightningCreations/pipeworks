@@ -40,7 +40,7 @@ class Scene {
     /// \brief Get a list of \ref GameObject "GameObjects" in the Scene.
     /// \return List of every GameObject currently in the Scene. The objects can be modified, but modifying the list doesn't change the internal structure.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
-    std::vector<GameObject*> objects() const;
+    const std::vector<GameObject*>& objects() const;
     /// \brief Add a GameObject to the Scene.
     /// \param obj GameObject to be added to the Scene.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.

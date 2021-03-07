@@ -17,6 +17,8 @@ namespace pipeworks {
 
 /// \brief An object to be represented in the Engine.
 class GameObject {
+  private:
+    static std::vector<std::string> empty_resource_list;
   protected:
     float m_x;
     float m_y;
@@ -51,7 +53,7 @@ class GameObject {
     /// \pre Calling this from any thread except the Engine thread results in undefined behavior.
     ///
     /// The base implementation has no resources to load, therefore it always returns an empty vector.
-    virtual std::vector<std::string> loadable_resources() { return std::vector<std::string>(); }
+    virtual std::vector<std::string>& loadable_resources() { return empty_resource_list; }
     /// \brief Get the current (shifted) X position of the object
     /// \return The X position of this object, shifted by the active camera
     /// \pre Calling this from any thread except the Engine thread results in undefined behavior.

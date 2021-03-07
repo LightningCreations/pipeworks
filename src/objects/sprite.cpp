@@ -52,7 +52,7 @@ bool Sprite::is_loaded() {
     return m_loaded;
 }
 
-std::vector<std::string> Sprite::loadable_resources() {
+std::vector<std::string>& Sprite::loadable_resources() {
     return m_resources;
 }
 

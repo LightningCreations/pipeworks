@@ -45,7 +45,7 @@ class Sprite : public GameObject {
     void render(Renderer&);
     void finished_loading();
     bool is_loaded();
-    std::vector<std::string> loadable_resources();
+    std::vector<std::string>& loadable_resources();
     /// \brief Set the current animation frame.
     /// \param frame The animation frame to start rendering.
     /// \pre This may be called before or after the Engine is started. If the Engine is started, this function must be called from the Engine thread; otherwise, the behavior is undefined.
