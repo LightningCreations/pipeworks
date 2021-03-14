@@ -13,6 +13,7 @@ struct EventBuffer{
 
 Engine::Engine(std::unique_ptr<Renderer> renderer): m_renderer(std::move(renderer)), m_active_load_threads(0), m_eventQueue{64*sizeof(EventBuffer)} {
     m_renderer->set_active_scene_list(&m_active_scenes);
+    m_renderer->set_active_engine(this);
     m_renderer->set_width(1280);
     m_renderer->set_height(720);
 }

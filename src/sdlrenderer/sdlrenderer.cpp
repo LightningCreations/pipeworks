@@ -101,6 +101,11 @@ void SDLRenderer::set_active_scene_list(std::vector<Scene> *scenes) {
     // No further processing needed
 }
 
+void SDLRenderer::set_active_engine(Engine *engine) {
+    m_engine = engine;
+    // No further processing needed
+}
+
 void SDLRenderer::set_width(uint32_t width) {
     m_width = width;
     m_xoa = ((float) m_width) / m_height; // Offset amount to stay centered

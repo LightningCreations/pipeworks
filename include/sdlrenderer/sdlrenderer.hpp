@@ -22,9 +22,11 @@ class SDLRenderer : public Renderer {
     uint32_t m_height;
     float m_xoa;
     bool m_keys_down[256];
+    Engine *m_engine;
   public:
     SDLRenderer();
     ~SDLRenderer();
+    void set_active_engine(Engine*);
     void set_active_scene_list(std::vector<Scene>*);
     void set_width(uint32_t);
     void set_height(uint32_t);

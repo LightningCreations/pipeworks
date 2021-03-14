@@ -7,6 +7,7 @@ class Renderer;
 
 }
 
+#include "engine.hpp"
 #include "scene.hpp"
 
 #include <cstdint>
@@ -18,6 +19,11 @@ namespace pipeworks {
 class Renderer {
   public:
     virtual ~Renderer() = 0;
+    /// \brief Set the active Engine.
+    /// \pre This is expected to be run from the Engine on initialization, running any other time is undefined behavior.
+    ///
+    /// The Engine is intended for use in firing events primarily.
+    virtual void set_active_engine(Engine*) = 0;
     /// \brief Set the list of active Scenes.
     /// \pre This is expected to be run from the Engine on initialization, running any other time is undefined behavior.
     ///
