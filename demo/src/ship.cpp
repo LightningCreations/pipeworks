@@ -19,10 +19,10 @@ static inline float maxf(float a, float b) {
 
 void Ship::move_player_ship(void *data, EventType event_type, Engine &engine) {
     float delta = 1.0f/60; // Temporary
-    Renderer &renderer = engine.renderer();
+    InputManager &input_manager = engine.input_manager();
 
-    float accel = (renderer.is_key_down('d') - renderer.is_key_down('a')) * 4;
-    int8_t rot = renderer.is_key_down('s') - renderer.is_key_down('w');
+    float accel = (input_manager.is_key_pressed(KeyCode::LetterD) - input_manager.is_key_pressed(KeyCode::LetterA)) * 4;
+    int8_t rot = input_manager.is_key_pressed(KeyCode::LetterS) - input_manager.is_key_pressed(KeyCode::LetterW);
     m_rot += rot;
     if(m_rot < 0) m_rot = 0;
     if(m_rot > 180) m_rot = 180;
@@ -43,7 +43,7 @@ void Ship::move_player_ship(void *data, EventType event_type, Engine &engine) {
 
     float speed = sqrt(m_vx*m_vx+m_vy*m_vy);
 
-    m_rear_thruster.set_enabled(renderer.is_key_down('d'));
+    m_rear_thruster.set_enabled(input_manager.is_key_pressed(KeyCode::LetterD));
     m_rear_thruster.set_x(m_x-0.14f*sin(angle));
     m_rear_thruster.set_y(m_y-0.14f*cos(angle));
     m_rear_thruster.set_v(ParticleParameter{     -0.15f+speed, 0.03f, 0, 0, 0, 0});
