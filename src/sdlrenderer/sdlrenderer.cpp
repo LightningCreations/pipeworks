@@ -81,37 +81,39 @@ void SDLRenderer::render_poll() {
             if(event.key.keysym.sym < 256) {
                 m_keys_down[event.key.keysym.sym] = true;
             }
-            KeyCode pcode;
+            KeyCode *pcode;
             if(event.key.keysym.scancode >= SDL_SCANCODE_A && event.key.keysym.scancode <= SDL_SCANCODE_Z)
-                pcode = static_cast<KeyCode>(event.key.keysym.scancode - SDL_SCANCODE_A + 'A');
+                pcode = new KeyCode(static_cast<KeyCode>(event.key.keysym.scancode - SDL_SCANCODE_A + 'A'));
             else if(event.key.keysym.sym >= '0' && event.key.keysym.sym <= '9')
-                pcode = static_cast<KeyCode>(event.key.keysym.scancode - SDL_SCANCODE_0 + '0');
+                pcode = new KeyCode(static_cast<KeyCode>(event.key.keysym.scancode - SDL_SCANCODE_0 + '0'));
             else if(event.key.keysym.scancode == SDL_SCANCODE_SPACE)
-                pcode = KeyCode::Space;
+                pcode = new KeyCode(KeyCode::Space);
             else if(event.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
-                pcode = KeyCode::LShift;
+                pcode = new KeyCode(KeyCode::LShift);
             else {
                 printf("Unrecognized key symbol '%c'", event.key.keysym.sym);
+                continue;
             }
-            m_engine->fire_event(EventType::KeyDown, &pcode); // This seems potentially problematic
+            m_engine->fire_event(EventType::KeyDown, pcode); // This seems potentially problematic
         }
         else if(event.type == SDL_KEYUP) {
             if(event.key.keysym.sym < 256) {
                 m_keys_down[event.key.keysym.sym] = false;
             }
-            KeyCode pcode;
+            KeyCode *pcode;
             if(event.key.keysym.scancode >= SDL_SCANCODE_A && event.key.keysym.scancode <= SDL_SCANCODE_Z)
-                pcode = static_cast<KeyCode>(event.key.keysym.scancode - SDL_SCANCODE_A + 'A');
+                pcode = new KeyCode(static_cast<KeyCode>(event.key.keysym.scancode - SDL_SCANCODE_A + 'A'));
             else if(event.key.keysym.sym >= '0' && event.key.keysym.sym <= '9')
-                pcode = static_cast<KeyCode>(event.key.keysym.scancode - SDL_SCANCODE_0 + '0');
+                pcode = new KeyCode(static_cast<KeyCode>(event.key.keysym.scancode - SDL_SCANCODE_0 + '0'));
             else if(event.key.keysym.scancode == SDL_SCANCODE_SPACE)
-                pcode = KeyCode::Space;
+                pcode = new KeyCode(KeyCode::Space);
             else if(event.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
-                pcode = KeyCode::LShift;
+                pcode = new KeyCode(KeyCode::LShift);
             else {
                 printf("Unrecognized key symbol '%c'", event.key.keysym.sym);
+                continue;
             }
-            m_engine->fire_event(EventType::KeyUp, &pcode);
+            m_engine->fire_event(EventType::KeyUp, pcode);
         }
     }
 }

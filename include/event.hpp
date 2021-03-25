@@ -50,6 +50,8 @@ struct Event {
     ///
     /// The callback takes two `void*` as parameters. The first is the user-defined data, while the second is an event-specific data structure.
     /// The other two fields should be self-explanatory: The EventType field passes the event type to repond to, and the Engine& field passes a copy of the Engine.
+    ///
+    /// The data shall be destructed after the Event has been processed, assuming data isn't a `nullptr`.
     Event(EventType type, void(*callback)(void*,void*,EventType,Engine&), void *data);
     /// \brief Call the event listener.
     /// \param eventdata The event-specific data.
