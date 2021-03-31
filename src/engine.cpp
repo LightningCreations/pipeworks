@@ -144,7 +144,7 @@ Renderer& Engine::renderer() {
 }
 InputManager& Engine::input_manager(){
     if(!this->m_inputMan){
-        this->m_inputMan = InputManager{*this};
+        this->m_inputMan.emplace(*this,pipeworks::_token{});
     }
     return *this->m_inputMan;
 }

@@ -4,7 +4,7 @@
 #include <memory>
 
 namespace pipeworks {
-    InputManager::InputManager(Engine &e) {
+    InputManager::InputManager(Engine &e,_token) {
         e.register_event(std::make_unique<Event>(EventType::KeyUp | EventType::KeyDown,
             [](void *udata, void *event, EventType t, Engine &engine) {
                 static_cast<void>(&engine);

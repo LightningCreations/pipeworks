@@ -166,18 +166,24 @@ namespace pipeworks {
         Numpad9 = 0xfe39,
         
     };
+
+    struct _token{
+      explicit _token()=default;
+    };
+
     class Engine;
     /// \brief A type used to access synchronous input state from the engine.
     struct InputManager{
       private:
         std::unordered_set<KeyCode> keys;
         friend class Engine;
-        InputManager(Engine& e);
+        
         InputManager(const InputManager&) = delete;
         InputManager& operator=(const InputManager&) = delete;
         InputManager(InputManager&&) = delete;
         InputManager& operator=(InputManager&&) = delete;
       public:
+        InputManager(Engine& e,_token tok);
         /// \brief checks if the given key is pressed
         /// \param code The code to check
         /// \pre Must only be called from the Engine Thread.
