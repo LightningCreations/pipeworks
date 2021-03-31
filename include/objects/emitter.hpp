@@ -45,6 +45,7 @@ struct Particle {
 
 class Emitter : public GameObject {
   private:
+    uint8_t m_count_per_tick;
     bool m_enabled;
     float m_lifetime;
     ParticleParameter m_v;
@@ -57,7 +58,8 @@ class Emitter : public GameObject {
   public:
     /// \brief Create a new emitter
     Emitter(float x, float y, float z,
-        float lifetime, ParticleParameter v, ParticleParameter t, ParticleParameter r, ParticleParameter g, ParticleParameter b);
+        float lifetime, ParticleParameter v, ParticleParameter t, ParticleParameter r, ParticleParameter g, ParticleParameter b,
+        uint8_t count_per_tick = 1);
     /// \brief Enable or disable the emitter
     void set_enabled(bool enabled);
     void set_v(ParticleParameter);

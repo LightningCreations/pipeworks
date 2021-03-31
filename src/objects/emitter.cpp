@@ -4,8 +4,8 @@
 namespace pipeworks {
 
 Emitter::Emitter(float x, float y, float z,
-    float lifetime, ParticleParameter v, ParticleParameter t, ParticleParameter r, ParticleParameter g, ParticleParameter b):
-    GameObject(x, y, z), m_enabled(false), m_lifetime(lifetime), m_v(v), m_t(t), m_r(r), m_g(g), m_b(b),
+    float lifetime, ParticleParameter v, ParticleParameter t, ParticleParameter r, ParticleParameter g, ParticleParameter b, uint8_t count_per_tick):
+    GameObject(x, y, z), m_count_per_tick(count_per_tick), m_enabled(false), m_lifetime(lifetime), m_v(v), m_t(t), m_r(r), m_g(g), m_b(b),
     m_rng(0) {} // Deterministically seeded for no good reason.
 // Actually, there is a good reason: Testing in the future will want deterministic results.
 
@@ -14,6 +14,7 @@ void Emitter::set_enabled(bool enabled) {
 }
 
 void Emitter::render(Renderer &renderer) {
+    float delta = 1.0f/60; // Delta correction doesn't exist yet, so we have a placeholder delta
     if(m_enabled) {
         std::uniform_real_distribution sv(0.f,m_v.sv);
         std::uniform_real_distribution sdv(0.f,m_v.sdv);
@@ -30,16 +31,17 @@ void Emitter::render(Renderer &renderer) {
         std::uniform_real_distribution sb(0.f,m_b.sv);
         std::uniform_real_distribution sdb(0.f,m_b.sdv);
         std::uniform_real_distribution sddb(0.f,m_b.sddv);
-        m_particles.push_back(Particle{
-            0, m_x, m_y,
-            m_v.v+sv(m_rng)-m_v.sv/2, m_v.dv+sdv(m_rng)-m_v.sdv/2, m_v.ddv+sddv(m_rng)-m_v.sddv/2,
-            m_t.v+st(m_rng)-m_t.sv/2, m_t.dv+sdt(m_rng)-m_t.sdv/2, m_t.ddv+sddt(m_rng)-m_t.sddv/2,
-            m_r.v+sr(m_rng)-m_r.sv/2, m_r.dv+sdr(m_rng)-m_r.sdv/2, m_r.ddv+sddr(m_rng)-m_r.sddv/2,
-            m_g.v+sg(m_rng)-m_g.sv/2, m_g.dv+sdg(m_rng)-m_g.sdv/2, m_g.ddv+sddg(m_rng)-m_g.sddv/2,
-            m_b.v+sb(m_rng)-m_b.sv/2, m_b.dv+sdb(m_rng)-m_b.sdv/2, m_b.ddv+sddb(m_rng)-m_b.sddv/2
-        });
+        for(int i = 0; i < m_count_per_tick; i++) {
+            m_particles.push_back(Particle{
+                0, m_x, m_y,
+                m_v.v+sv(m_rng)-m_v.sv/2, m_v.dv+sdv(m_rng)-m_v.sdv/2, m_v.ddv+sddv(m_rng)-m_v.sddv/2,
+                m_t.v+st(m_rng)-m_t.sv/2, m_t.dv+sdt(m_rng)-m_t.sdv/2, m_t.ddv+sddt(m_rng)-m_t.sddv/2,
+                m_r.v+sr(m_rng)-m_r.sv/2, m_r.dv+sdr(m_rng)-m_r.sdv/2, m_r.ddv+sddr(m_rng)-m_r.sddv/2,
+                m_g.v+sg(m_rng)-m_g.sv/2, m_g.dv+sdg(m_rng)-m_g.sdv/2, m_g.ddv+sddg(m_rng)-m_g.sddv/2,
+                m_b.v+sb(m_rng)-m_b.sv/2, m_b.dv+sdb(m_rng)-m_b.sdv/2, m_b.ddv+sddb(m_rng)-m_b.sddv/2
+            });
+        }
     }
-    float delta = 1.0f/60; // Delta correction doesn't exist yet, so we have a placeholder delta
     float xoff = x() - m_x; // There should be a way of doing this that makes more sense.
     float yoff = y() - m_y; // That's a problem for future me.
     for(std::vector<Particle>::iterator itr = m_particles.begin(); itr < m_particles.end();) {

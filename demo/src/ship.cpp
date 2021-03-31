@@ -49,7 +49,7 @@ void Ship::move_player_ship(void *data, EventType event_type, Engine &engine) {
     m_rear_thruster.set_enabled(input_manager.is_key_pressed(KeyCode::LetterD));
     m_rear_thruster.set_x(m_x-0.14f*sin(angle));
     m_rear_thruster.set_y(m_y-0.14f*cos(angle));
-    m_rear_thruster.set_v(ParticleParameter{     -0.15f+speed, 0.03f, 0, 0, 0, 0});
+    m_rear_thruster.set_v(ParticleParameter{     -0.15f+speed, 0.05f, 0, 0, 0, 0});
     m_rear_thruster.set_t(ParticleParameter{atan2f(m_vy,m_vx), 0.01f, 0, 0, 0, 0});
 }
 
@@ -70,11 +70,12 @@ Ship::Ship(float x, float y, float z, std::string name, Engine &engine, Scene &s
     Sprite(x, y, 1, 0.4f, 0.4f, get_frames_from_name(name)), m_vx(0), m_vy(0), m_rot(90),
     m_rear_thruster(
         x-0.14f, y, z, 0.5f,
-        ParticleParameter{-0.15f, 0.03f,      0,      0,      0, 0},
+        ParticleParameter{-0.15f, 0.08f,      0,      0,      0, 0},
         ParticleParameter{     0, 0.01f,      0,      0,      0, 0},
-        ParticleParameter{  0.8f,  0.1f,  -0.4f,  0.04f, -0.16f, 0},
-        ParticleParameter{  0.4f, 0.05f,  -0.6f,  0.02f, -0.08f, 0},
-        ParticleParameter{  0.1f, 0.01f, -0.15f, 0.005f, -0.02f, 0}
+        ParticleParameter{  0.8f,  0.1f,  -1.0f,  0.04f, -0.16f, 0},
+        ParticleParameter{  0.4f, 0.05f,  -0.5f,  0.02f, -0.08f, 0},
+        ParticleParameter{  0.1f, 0.01f,  -0.2f, 0.005f, -0.02f, 0},
+        32
     ) {
     if(is_player)
 	engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &mps_wrap, this)));
