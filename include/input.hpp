@@ -173,6 +173,10 @@ namespace pipeworks {
         std::unordered_set<KeyCode> keys;
         friend class Engine;
         InputManager(Engine& e);
+        InputManager(const InputManager&) = delete;
+        InputManager& operator=(const InputManager&) = delete;
+        InputManager(InputManager&&) = delete;
+        InputManager& operator=(InputManager&&) = delete;
       public:
         /// \brief checks if the given key is pressed
         /// \param code The code to check
