@@ -90,9 +90,9 @@ void SDLRenderer::render_poll() {
                 pcode = new KeyCode(KeyCode::Space);
             else if(event.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
                 pcode = new KeyCode(KeyCode::LShift);
-            else if(event.ket.keysym.scancode == SDL_SCANCODE_LALT)
+            else if(event.key.keysym.scancode == SDL_SCANCODE_LALT)
                 pcode = new KeyCode(KeyCode::LAlt);
-            else if(event.ket.keysym.scancode == SDL_SCANCODE_TAB)
+            else if(event.key.keysym.scancode == SDL_SCANCODE_TAB)
                 pcode = new KeyCode(KeyCode::Tab);
             else {
                 printf("Unrecognized key symbol '%c'", event.key.keysym.sym);
@@ -113,9 +113,9 @@ void SDLRenderer::render_poll() {
                 pcode = new KeyCode(KeyCode::Space);
             else if(event.key.keysym.scancode == SDL_SCANCODE_LSHIFT)
                 pcode = new KeyCode(KeyCode::LShift);
-            else if(event.ket.keysym.scancode == SDL_SCANCODE_LALT)
+            else if(event.key.keysym.scancode == SDL_SCANCODE_LALT)
                 pcode = new KeyCode(KeyCode::LAlt);
-            else if(event.ket.keysym.scancode == SDL_SCANCODE_TAB)
+            else if(event.key.keysym.scancode == SDL_SCANCODE_TAB)
                 pcode = new KeyCode(KeyCode::Tab);
             else {
                 printf("Unrecognized key symbol '%c'", event.key.keysym.sym);
