@@ -32,9 +32,6 @@ void Ship::move_player_ship(void *data, EventType event_type, Engine &engine) {
     float ax = sin(angle) * accel;
     float ay = cos(angle) * accel;
 
-    ax = cbrt(m_vx*m_vx*m_vx+ax*ax*ax) - m_vx; // It's hard to speed up, it's easy to slow down.
-    ay = cbrt(m_vy*m_vy*m_vy+ay*ay*ay) - m_vy; // Probably something to do with thruster durability.
-
     m_vx += ax*delta;
     m_vy += ay*delta;
 
@@ -42,6 +39,12 @@ void Ship::move_player_ship(void *data, EventType event_type, Engine &engine) {
     m_y += m_vy*delta;
 
     float speed = sqrt(m_vx*m_vx+m_vy*m_vy);
+
+    if(speed > 4) {
+        m_vx /= speed / 4;
+        m_vy /= speed / 4;
+        speed = 4;
+    }
 
     m_rear_thruster.set_enabled(input_manager.is_key_pressed(KeyCode::LetterD));
     m_rear_thruster.set_x(m_x-0.14f*sin(angle));
