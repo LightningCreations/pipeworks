@@ -19,6 +19,10 @@ class Ship : public Sprite {
     float m_vy;
     int16_t m_rot;
     Emitter m_rear_thruster;
+    Ship(const Ship&) = delete;
+    Ship& operator=(const Ship&) = delete;
+    Ship(Ship&&) = delete;
+    Ship& operator=(Ship&&) = delete;
   public:
     Ship(float x, float y, float z, std::string name, Engine &engine, Scene &scene, bool is_player);
     void move_player_ship(void *data, EventType event_type, Engine &engine);
