@@ -18,6 +18,10 @@ class StarfieldBackground: public GameObject {
     float stary[STARFIELD_NUM_STARS];
     float starz[STARFIELD_NUM_STARS];
     Renderer *renderer;
+    StarfieldBackground(const StarfieldBackground&) = delete;
+    StarfieldBackground& operator=(const StarfieldBackground&) = delete;
+    StarfieldBackground(StarfieldBackground&&) = delete;
+    StarfieldBackground& operator=(StarfieldBackground&&) = delete;
   public:
     StarfieldBackground(float z, Engine &engine) noexcept;
     void render(Renderer&);
