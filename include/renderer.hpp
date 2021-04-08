@@ -83,8 +83,8 @@ class Renderer {
     /// It is recommended, but not required, to implement this function. The default implementation calls fill_rect with a rectangle the size of the screen or bigger.
     /// Eventually, implementing this function will be required.
     virtual void clear() {
-        float w = width();
-        float h = height();
+        float w = (float) width();
+        float h = (float) height();
         float a = (w/h >= 1) ? w/h : 1;
         float b = (h/w >= 1) ? h/w : 1;
         fill_rect(-a, b, 2*a, 2*b, 0, 0, 0, 255);
