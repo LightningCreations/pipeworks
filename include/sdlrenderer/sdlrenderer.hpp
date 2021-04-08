@@ -26,19 +26,20 @@ class SDLRenderer : public Renderer {
   public:
     SDLRenderer();
     ~SDLRenderer();
-    void set_active_engine(Engine*);
-    void set_active_scene_list(std::vector<Scene>*);
-    void set_width(uint32_t);
-    void set_height(uint32_t);
-    void open_window();
-    void close_window();
-    bool is_close_requested();
-    void render_poll();
-    void sync(uint32_t);
-    void fill_rect(float x, float y, float w, float h, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-    uint32_t width();
-    uint32_t height();
-    bool is_key_down(char c);
+    void set_active_engine(Engine*) override;
+    void set_active_scene_list(std::vector<Scene>*) override;
+    void set_width(uint32_t) override;
+    void set_height(uint32_t) override;
+    void open_window() override;
+    void close_window() override;
+    bool is_close_requested() override;
+    void render_poll() override;
+    void sync(uint32_t) override;
+    void fill_rect(float x, float y, float w, float h, uint8_t r, uint8_t g, uint8_t b, uint8_t a) override;
+    void clear() override;
+    uint32_t width() override;
+    uint32_t height() override;
+    bool is_key_down(char c) override;
 };
 
 }

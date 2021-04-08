@@ -77,6 +77,18 @@ class Renderer {
     ///
     /// Currently, alpha is implemented by making the pixel either fully opaque or fully transparent. This will be changed later.
     virtual void fill_rect(float x, float y, float w, float h, uint8_t r, uint8_t g, uint8_t b, uint8_t a) = 0;
+    /// \brief Fill the screen with black.
+    /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
+    ///
+    /// It is recommended, but not required, to implement this function. The default implementation calls fill_rect with a rectangle the size of the screen or bigger.
+    /// Eventually, implementing this function will be required.
+    virtual void clear() {
+        float w = width();
+        float h = height();
+        float a = (w/h >= 1) ? w/h : 1;
+        float b = (h/w >= 1) ? h/w : 1;
+        fill_rect(-a, b, 2*a, 2*b, 0, 0, 0, 255);
+    }
     /// \brief Get the width of the screen.
     /// \return The width of the screen in pixels.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.

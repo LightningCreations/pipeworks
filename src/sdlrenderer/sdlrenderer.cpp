@@ -177,14 +177,22 @@ void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t
 
     if(a < 128) return; // Temporary fix for not having alpha blending
 
-    for(int32_t curx = nx; curx < (nx+nw) || curx == nx; curx++) { // More questionable decisions to explain!
+    for(int32_t curx = nx; curx < (nx+nw) || curx == nx; ++curx) { // More questionable decisions to explain!
         // Basically, I just want a simple way to always render at least one pixel.
         // I trust the optimizer to essentially make this a do-for loop, which would solve the problem entirely.
-        for(int32_t cury = ny; cury < (ny+nh) || cury == ny; cury++) { // BTW, the reason I'm using cur{x,y} instead of offsets is again for optimization.
+        for(int32_t cury = ny; cury < (ny+nh) || cury == ny; ++cury) { // BTW, the reason I'm using cur{x,y} instead of offsets is again for optimization.
             m_pixels[(curx+cury*m_width)*4+1] = b; // This way, the compiler only has to
             m_pixels[(curx+cury*m_width)*4+2] = g; // evaluate n{x,y}+n{w,h} once instead of
             m_pixels[(curx+cury*m_width)*4+3] = r; // evaluating off{x,y}+n{x,y} every iteration.
         }
+    }
+}
+
+void SDLRenderer::clear() {
+    for(uint32_t i = 0; i < m_width*m_height; ++i) {
+        m_pixels[i*4+1] = 0;
+        m_pixels[i*4+2] = 0;
+        m_pixels[i*4+3] = 0;
     }
 }
 
