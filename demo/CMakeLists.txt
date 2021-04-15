@@ -1,6 +1,7 @@
 project(fotc CXX)
 
 add_executable(fotc
+    src/blaster.cpp src/blaster.hpp
     src/main.cpp
     src/ship.cpp src/ship.hpp
     src/starfieldbackground.cpp src/starfieldbackground.hpp

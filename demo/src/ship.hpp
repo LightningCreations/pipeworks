@@ -9,6 +9,8 @@
 #include <objects/emitter.hpp>
 #include <objects/sprite.hpp>
 
+#include "blaster.hpp"
+
 using namespace pipeworks;
 
 namespace fotc {
@@ -19,6 +21,7 @@ class Ship : public Sprite {
     float m_vy;
     int16_t m_rot;
     Emitter m_rear_thruster;
+    Blaster m_blaster;
     Ship(const Ship&) = delete;
     Ship& operator=(const Ship&) = delete;
     Ship(Ship&&) = delete;
@@ -28,6 +31,7 @@ class Ship : public Sprite {
     void move_player_ship(void *data, EventType event_type, Engine &engine);
     float world_x(); // Why these aren't API yet, I don't know.
     float world_y(); // Wait, I do know. It's because it's 9 PM and I need this to work.
+    void fire();
 };
 
 }
