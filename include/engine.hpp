@@ -14,6 +14,7 @@
 #include <thread>
 #include <vector>
 #include <optional>
+#include <list>
 
 #define PW_VERSION "0.1.0"
 
@@ -35,7 +36,7 @@ class Engine {
     void start0(); // Start in new thread
     std::atomic_uint8_t m_active_load_threads;
     void load_resource(std::string resource);
-    std::vector<Event> m_events;
+    std::list<Event> m_events;
     std::optional<InputManager> m_inputMan;
     Soft_Ring_Buffer m_eventQueue;
     void fire_event0(EventType type, void *data);
