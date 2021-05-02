@@ -59,10 +59,10 @@ void Ship::move_player_ship(void *data, EventType event_type, Engine &engine) {
     m_rear_thruster.set_v(ParticleParameter{     -0.30f+speed, 0.10f, 0, 0, 0, 0});
     m_rear_thruster.set_t(ParticleParameter{atan2f(m_vy,m_vx), 0.02f, 0, 0, 0, 0});
 
-    m_blaster.set_x(m_x);
-    m_blaster.set_y(m_y);
-    m_blaster.set_vx(m_vx);
-    m_blaster.set_vy(m_vy);
+    m_blaster.set_x(m_x+m_vx*delta+sin(angle)*0.08f);
+    m_blaster.set_y(m_y+m_vy*delta+cos(angle)*0.08f);
+    m_blaster.set_vx(m_vx+sin(angle)*6);
+    m_blaster.set_vy(m_vy+cos(angle)*6);
 }
 
 static std::vector<std::string> get_frames_from_name(std::string name) {

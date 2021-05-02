@@ -39,7 +39,6 @@ class SDLRenderer : public Renderer {
     void clear() override;
     uint32_t width() override;
     uint32_t height() override;
-    bool is_key_down(char c) override;
 };
 
 }

@@ -10,7 +10,9 @@ class Renderer;
 #include "engine.hpp"
 #include "scene.hpp"
 
+#include <algorithm>
 #include <cstdint>
+#include <limits>
 #include <vector>
 
 namespace pipeworks {
@@ -89,6 +91,106 @@ class Renderer {
         float b = (h/w >= 1) ? h/w : 1;
         fill_rect(-a, b, 2*a, 2*b, 0, 0, 0, 255);
     }
+    /// \brief Draw a line between two points with a given thickness
+    /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
+    ///
+    /// It is recommended, but not required, to implement this function. The default inplementation calls fill_rect a sufficient number of times to draw a 1px line between the two points.
+    /// Eventually, implementing this function will be required.
+    virtual void draw_line(float x0, float y0, float x1, float y1, float width, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+        float dx = x0 - x1;
+        if(dx < std::numeric_limits<float>::epsilon() && dx > -std::numeric_limits<float>::epsilon()) { // Vertical lines are no good
+            if(y0 < y1) fill_rect(x0, y1, 0, y1-y0, r, g, b, a);
+            else fill_rect(x0, y0, 0, y0-y1, r, g, b, a);
+            return;
+        }
+        float dy = y0 - y1;
+        if(dy < std::numeric_limits<float>::epsilon() && dy > -std::numeric_limits<float>::epsilon()) { // Horizontal lines are no good
+            if(x0 < x1) fill_rect(x0, y0, x1-x0, 0, r, g, b, a);
+            else fill_rect(x1, y0, x0-x1, 0, r, g, b, a);
+            return;
+        }
+        float slope = dy/dx;
+        float error = 0;
+        float res = (float) std::min(this->width(), height());
+        if(slope < 0) {
+            slope = -slope;
+            if(slope > 1) {
+                if(y0 > y1) {
+                    float tmp = x0;
+                    x0 = x1;
+                    x1 = tmp;
+                    tmp = y0;
+                    y0 = y1;
+                    y1 = tmp;
+                }
+                float x = x0;
+                for(float y = y0; y < y1; y += 1/res) {
+                    fill_rect(x, y, width, width, r, g, b, a);
+                    error += 1/slope;
+                    if(error >= 0.5) {
+                        x -= 1/res;
+                        error -= 1;
+                    }
+                }
+            } else { // Standard version of Bresenham's line drawing algorithm
+                if(x0 > x1) {
+                    float tmp = x0;
+                    x0 = x1;
+                    x1 = tmp;
+                    tmp = y0;
+                    y0 = y1;
+                    y1 = tmp;
+                }
+                float y = y0;
+                for(float x = x0; x < x1; x += 1/res) {
+                    fill_rect(x, y, width, width, r, g, b, a);
+                    error += slope;
+                    if(error >= 0.5) {
+                        y -= 1/res;
+                        error -= 1;
+                    }
+                }
+            }
+        } else {
+            if(slope > 1) {
+                if(y0 > y1) {
+                    float tmp = x0;
+                    x0 = x1;
+                    x1 = tmp;
+                    tmp = y0;
+                    y0 = y1;
+                    y1 = tmp;
+                }
+                float x = x0;
+                for(float y = y0; y < y1; y += 1/res) {
+                    fill_rect(x, y, width, width, r, g, b, a);
+                    error += 1/slope;
+                    if(error >= 0.5) {
+                        x += 1/res;
+                        error -= 1;
+                    }
+                }
+            } else { // Standard version of Bresenham's line drawing algorithm
+                if(x0 > x1) {
+                    float tmp = x0;
+                    x0 = x1;
+                    x1 = tmp;
+                    tmp = y0;
+                    y0 = y1;
+                    y1 = tmp;
+                }
+                float y = y0;
+                for(float x = x0; x < x1; x += 1/res) {
+                    fill_rect(x, y, width, width, r, g, b, a);
+                    error += slope;
+                    if(error >= 0.5) {
+                        y += 1/res;
+                        error -= 1;
+                    }
+                }
+            }
+        }
+    }
     /// \brief Get the width of the screen.
     /// \return The width of the screen in pixels.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
@@ -97,21 +199,6 @@ class Renderer {
     /// \return The height of the screen in pixels.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
     virtual uint32_t height() = 0;
-    /// \brief Determine if a specific character is pressed.
-    /// \return `true` if the key is down, `false` otherwise.
-    /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
-    ///
-    /// This API is preemptively deprecated in favor of an upcoming API.
-    virtual bool is_key_down(char c) = 0;
-    /// \brief Determine if a specific (wide) character is pressed.
-    /// \return `true` if the key is down, `false` otherwise.
-    /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
-    ///
-    /// This API is preemptively deprecated in favor of an upcoming API.
-    virtual bool is_key_down(wchar_t c) { // If the underlying implementation doesn't support wide characters, we'll do it for them
-        if(c > 0xff) return 0;
-        return is_key_down(c);
-    }
 };
 
 }

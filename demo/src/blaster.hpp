@@ -12,6 +12,8 @@ class Blaster : public pipeworks::GameObject {
     float m_laser_y[128];
     float m_laser_vx[128];
     float m_laser_vy[128];
+    float m_laser_sx[128];
+    float m_laser_sy[128];
     bool m_laser_active[128];
     float m_vx;
     float m_vy;

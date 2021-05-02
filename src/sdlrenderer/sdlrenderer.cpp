@@ -196,8 +196,4 @@ void SDLRenderer::clear() {
     }
 }
 
-bool SDLRenderer::is_key_down(char c) {
-    return m_keys_down[c];
-}
-
 }
