@@ -14,7 +14,7 @@ void Blaster::render(pipeworks::Renderer &renderer) {
         float next_sx = x() - m_x + m_laser_x[i];
         float next_sy = y() - m_y + m_laser_y[i];
         if(m_laser_sx[i] != 0 || m_laser_sy[i] != 0) {
-            renderer.draw_line(m_laser_sx[i], m_laser_sy[i], next_sx, next_sy, 0, 255, 0, 0, 255);
+            renderer.draw_line(m_laser_sx[i], m_laser_sy[i], next_sx, next_sy, 0.01f, 255, 0, 0, 255);
         }
         m_laser_sx[i] = next_sx;
         m_laser_sy[i] = next_sy;

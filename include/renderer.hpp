@@ -99,14 +99,14 @@ class Renderer {
     virtual void draw_line(float x0, float y0, float x1, float y1, float width, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
         float dx = x0 - x1;
         if(dx < std::numeric_limits<float>::epsilon() && dx > -std::numeric_limits<float>::epsilon()) { // Vertical lines are no good
-            if(y0 < y1) fill_rect(x0, y1, 0, y1-y0, r, g, b, a);
-            else fill_rect(x0, y0, 0, y0-y1, r, g, b, a);
+            if(y0 < y1) fill_rect(x0-width/2, y1+width/2, width, y1-y0+width, r, g, b, a);
+            else fill_rect(x0-width/2, y0+width/2, width, y0-y1+width, r, g, b, a);
             return;
         }
         float dy = y0 - y1;
         if(dy < std::numeric_limits<float>::epsilon() && dy > -std::numeric_limits<float>::epsilon()) { // Horizontal lines are no good
-            if(x0 < x1) fill_rect(x0, y0, x1-x0, 0, r, g, b, a);
-            else fill_rect(x1, y0, x0-x1, 0, r, g, b, a);
+            if(x0 < x1) fill_rect(x0-width/2, y0+width/2, x1-x0+width, width, r, g, b, a);
+            else fill_rect(x1-width/2, y0-width/2, x0-x1+width, width, r, g, b, a);
             return;
         }
         float slope = dy/dx;
@@ -125,14 +125,14 @@ class Renderer {
                 }
                 float x = x0;
                 for(float y = y0; y < y1; y += 1/res) {
-                    fill_rect(x, y, width, width, r, g, b, a);
+                    fill_rect(x-width/2, y+width/2, width, width, r, g, b, a);
                     error += 1/slope;
                     if(error >= 0.5) {
                         x -= 1/res;
                         error -= 1;
                     }
                 }
-            } else { // Standard version of Bresenham's line drawing algorithm
+            } else {
                 if(x0 > x1) {
                     float tmp = x0;
                     x0 = x1;
@@ -143,7 +143,7 @@ class Renderer {
                 }
                 float y = y0;
                 for(float x = x0; x < x1; x += 1/res) {
-                    fill_rect(x, y, width, width, r, g, b, a);
+                    fill_rect(x-width/2, y+width/2, width, width, r, g, b, a);
                     error += slope;
                     if(error >= 0.5) {
                         y -= 1/res;
@@ -163,14 +163,14 @@ class Renderer {
                 }
                 float x = x0;
                 for(float y = y0; y < y1; y += 1/res) {
-                    fill_rect(x, y, width, width, r, g, b, a);
+                    fill_rect(x-width/2, y+width/2, width, width, r, g, b, a);
                     error += 1/slope;
                     if(error >= 0.5) {
                         x += 1/res;
                         error -= 1;
                     }
                 }
-            } else { // Standard version of Bresenham's line drawing algorithm
+            } else { // Canonical version of Bresenham's line drawing algorithm
                 if(x0 > x1) {
                     float tmp = x0;
                     x0 = x1;
@@ -181,7 +181,7 @@ class Renderer {
                 }
                 float y = y0;
                 for(float x = x0; x < x1; x += 1/res) {
-                    fill_rect(x, y, width, width, r, g, b, a);
+                    fill_rect(x-width/2, y+width/2, width, width, r, g, b, a);
                     error += slope;
                     if(error >= 0.5) {
                         y += 1/res;
