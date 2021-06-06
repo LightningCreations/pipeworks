@@ -22,8 +22,10 @@ jlong JNICALL Engine_init_native(JNIEnv* env,jclass cl,jobject nr)noexcept{
     env->SetLongField(nr,f,0);
     // The above is a take operation.
     // If anything goes wrong, we leak i, but that's better than DF.
-    auto* e = new pipeworks::Engine{std::unique_ptr<pipeworks::Renderer>{reinterpret_cast<pipeworks::Renderer*>(static_cast<std::uintptr_t>(i))}};
-    return static_cast<jlong>(reinterpret_cast<std::uintptr_t>(e));
+    // The below is commented out because it no longer works. @InfernoDeity
+    // auto* e = new pipeworks::Engine{std::unique_ptr<pipeworks::Renderer>{reinterpret_cast<pipeworks::Renderer*>(static_cast<std::uintptr_t>(i))}};
+    // return static_cast<jlong>(reinterpret_cast<std::uintptr_t>(e));
+    return static_cast<jlong>(0);
 }
 
 

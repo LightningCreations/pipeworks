@@ -11,7 +11,7 @@ struct EventBuffer{
     void* udata;
 };
 
-Engine::Engine(std::unique_ptr<Renderer> renderer): m_renderer(std::move(renderer)), m_active_load_threads(0), m_eventQueue{64*sizeof(EventBuffer)} {
+Engine::Engine(std::unique_ptr<Renderer> renderer, std::unique_ptr<AudioPlayer> audio_player): m_audio_player(std::move(audio_player)), m_renderer(std::move(renderer)), m_active_load_threads(0), m_eventQueue{64*sizeof(EventBuffer)} {
     m_renderer->set_active_scene_list(&m_active_scenes);
     m_renderer->set_active_engine(this);
     m_renderer->set_width(1280);
@@ -45,6 +45,7 @@ void Engine::start0() {
             }
         }
         fire_event(EventType::FrameEnd, nullptr); // No data for end-of-frame yet
+        m_audio_player->tick(); // Get the audio response out ASAP; it *will* be behind video
         m_renderer->render_poll();
         if(m_renderer->is_close_requested()) m_running = false;
         m_renderer->sync(60); // 60 FPS default
@@ -138,10 +139,10 @@ void Engine::fire_event(EventType type,void *data){
     this->m_eventQueue.put(EventBuffer{type,data});
 }
 
-
 Renderer& Engine::renderer() {
     return *m_renderer;
 }
+
 InputManager& Engine::input_manager(){
     if(!this->m_inputMan){
         this->m_inputMan.emplace(*this,pipeworks::_token{});

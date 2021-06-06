@@ -1,6 +1,7 @@
 #ifndef PW_ENGINE_HPP
 #define PW_ENGINE_HPP
 
+#include "audioplayer.hpp"
 #include "event.hpp"
 #include "scene.hpp"
 #include "renderer.hpp"
@@ -25,6 +26,7 @@ namespace pipeworks {
 /// Manages backends as well as loading resources.
 class Engine {
   private:
+    std::unique_ptr<AudioPlayer> m_audio_player;
     std::unique_ptr<Renderer> m_renderer;
     std::vector<Scene> m_active_scenes;
     std::unique_ptr<Scene> m_init_scene;
@@ -51,7 +53,7 @@ class Engine {
   public:
     /// \brief Create a new Engine.
     /// \param renderer The Renderer to be used as a backend.
-    Engine(std::unique_ptr<Renderer> renderer);
+    Engine(std::unique_ptr<Renderer> renderer, std::unique_ptr<AudioPlayer> audio_player);
     /// \brief Set the Scene to be used on initialization.
     /// \param scene The Scene to be used as the initial scene.
     /// \pre This may be called before or after the Engine is started. If the Engine is started, this function must be called from the Engine thread; otherwise, the behavior is undefined.

@@ -6,16 +6,18 @@ include(GNUInstallDirs)
 find_package(Doxygen)
 option(PIPEWORKS_BUILD_DOCS "Build the Doxygen documentation for Pipeworks" DOXYGEN_FOUND)
 
+option(PIPEWORKS_BUILD_SDLAUDIOPLAYER "Build the SDL2-based audio playback engine for Pipeworks" ON)
 option(PIPEWORKS_BUILD_SDLRENDERER "Build the SDL2-based renderer for Pipeworks" ON)
 
 option(PIPEWORKS_BUILD_DEMO "Build the Pipeworks demo, Fire of the Clouds" ON)
-if(PIPEWORKS_BUILD_DEMO AND NOT PIPEWORKS_BUILD_SDLRENDERER)
+if(PIPEWORKS_BUILD_DEMO AND (NOT PIPEWORKS_BUILD_SDLAUDIOPLAYER OR NOT PIPEWORKS_BUILD_SDLRENDERER))
   message(FATAL_ERROR "Building the demo requires the SDL2 renderer; please check your configuration!")
 endif()
 
 add_subdirectory(3rdparty/ring-buffer)
 
 add_library(pipeworks
+  src/audioplayer.cpp include/audioplayer.hpp
   src/engine.cpp include/engine.hpp
   src/event.cpp include/event.hpp
   src/gameobject.cpp include/gameobject.hpp
@@ -49,7 +51,7 @@ target_compile_options(pipeworks PRIVATE
 
 set_target_properties(pipeworks PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-if(PIPEWORKS_BUILD_SDLRENDERER) # or any other SDL components
+if(PIPEWORKS_BUILD_SDLRENDERER OR PIPEWORKS_BUILD_SDLAUDIOPLAYER) # or any other SDL components
   if(WIN32)
     set(SDL2_DIR ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/SDL2/win32)
     message(STATUS "Set SDL2_DIR")
@@ -65,6 +67,33 @@ if(PIPEWORKS_BUILD_SDLRENDERER) # or any other SDL components
     target_link_libraries(pipeworks-sdl PRIVATE ${SDL2_LIBRARIES})
   else()
     target_link_libraries(pipeworks-sdl PRIVATE SDL2::SDL2) # Support both legacy and modern CMake config files
+  endif()
+endif()
+
+if(PIPEWORKS_BUILD_SDLAUDIOPLAYER)
+  add_library(pipeworks-sdlaudioplayer src/sdlaudioplayer/sdlaudioplayer.cpp include/sdlaudioplayer/sdlaudioplayer.hpp)
+  target_include_directories(pipeworks-sdlaudioplayer
+    PUBLIC
+      $<INSTALL_INTERFACE:include/sdlaudioplayer>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/sdlaudioplayer>
+    PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/sdlaudioplayer
+  )
+
+  set_target_properties(pipeworks-sdlaudioplayer PROPERTIES POSITION_INDEPENDENT_CODE ON)
+  if(DEFINED SDL2_INCLUDE_DIRS)
+    target_include_directories(pipeworks-sdlaudioplayer PUBLIC ${SDL2_INCLUDE_DIRS})
+  endif()
+  target_link_libraries(pipeworks-sdlaudioplayer
+    PUBLIC
+      pipeworks
+    PRIVATE
+      pipeworks-sdl
+  )
+  if(DEFINED SDL2_LIBRARIES)
+    target_link_libraries(pipeworks-sdlaudioplayer PUBLIC ${SDL2_LIBRARIES} "-pthread") # Because SDL2 needs pthread and doesn't declare it?
+  else()
+    target_link_libraries(pipeworks-sdlaudioplayer PUBLIC SDL2::SDL2) # Support both legacy and modern CMake config files
   endif()
 endif()
 
