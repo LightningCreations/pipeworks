@@ -11,11 +11,22 @@ struct EventBuffer{
     void* udata;
 };
 
+void engine_audio_callback_wrap(void *userdata, float *data, int len) {
+    ((Engine*) userdata)->audio_callback(data, len);
+}
+
 Engine::Engine(std::unique_ptr<Renderer> renderer, std::unique_ptr<AudioPlayer> audio_player): m_audio_player(std::move(audio_player)), m_renderer(std::move(renderer)), m_active_load_threads(0), m_eventQueue{64*sizeof(EventBuffer)} {
     m_renderer->set_active_scene_list(&m_active_scenes);
     m_renderer->set_active_engine(this);
     m_renderer->set_width(1280);
     m_renderer->set_height(720);
+    m_audio_player->set_callback(engine_audio_callback_wrap, (void*) this);
+}
+
+void Engine::audio_callback(float *data, int len) {
+    for(int i = 0; i < len/4; i++) {
+        data[i] = 0;
+    }
 }
 
 void Engine::set_init_scene(std::unique_ptr<Scene> scene) {

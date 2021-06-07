@@ -1,13 +1,17 @@
 #ifndef PW_SDLAUDIOPLAYER_HPP
 #define PW_SDLAUDIOPLAYER_HPP
 
-#include <audioplayer.hpp>
+#include "../audioplayer.hpp"
 
 namespace pipeworks {
 
 class SDLAudioPlayer : public AudioPlayer {
+  private:
+    bool m_callback_set;
   public:
-    void set_callback(void(*callback)(void*,uint8_t*,int), void *userdata);
+    SDLAudioPlayer();
+    ~SDLAudioPlayer();
+    void set_callback(void(*callback)(void*,float*,int), void *userdata);
     void tick();
 };
 

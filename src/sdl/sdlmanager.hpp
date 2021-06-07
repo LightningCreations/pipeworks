@@ -8,7 +8,9 @@ class SDLManager {
     SDLManager();
     ~SDLManager();
     void verify_active();
+    int init_audio();
     int init_video();
+    void quit_audio();
     void quit_video();
 };
 

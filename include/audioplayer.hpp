@@ -14,7 +14,7 @@ class AudioPlayer {
     /// There is no guarantee on what thread will call the callback function.
     ///
     /// The parameters to the callback are, in order, the userdata passed to the function, a buffer to hold audio data, and the number of samples to store.
-    virtual void set_callback(void(*callback)(void*,uint8_t*,int), void *userdata) = 0;
+    virtual void set_callback(void(*callback)(void*,float*,int), void *userdata) = 0;
     /// \brief Tick the audio player.
     /// \pre Running this from any thread besides the Engine thread causes undefined behavior.
     ///

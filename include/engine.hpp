@@ -42,6 +42,8 @@ class Engine {
     std::optional<InputManager> m_inputMan;
     Soft_Ring_Buffer m_eventQueue;
     void fire_event0(EventType type, void *data);
+    void audio_callback(float *data, int len);
+    friend void engine_audio_callback_wrap(void *userdata, float *data, int len);
   protected:
     /// \brief Deactivate Scene if it is active *without* notifying it.
     /// \param scene The Scene to deactivate.

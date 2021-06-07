@@ -14,6 +14,11 @@ if(PIPEWORKS_BUILD_DEMO AND (NOT PIPEWORKS_BUILD_SDLAUDIOPLAYER OR NOT PIPEWORKS
   message(FATAL_ERROR "Building the demo requires the SDL2 renderer; please check your configuration!")
 endif()
 
+option(PIPEWORKS_MARCH_NATIVE "Build the pipeworks libraries with the -march=native flag" ON)
+if(PIPEWORKS_MARCH_NATIVE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
+endif()
+
 add_subdirectory(3rdparty/ring-buffer)
 
 add_library(pipeworks
