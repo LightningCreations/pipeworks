@@ -1,8 +1,14 @@
 #include <engine.hpp>
 #include <resourcemanager.hpp>
 
+#include <chrono>
+#include <iomanip>
+#include <iostream>
+
 #include <stb_image.h>
 #include <whereami.h>
+
+#define DISPLAY_FPS true
 
 namespace pipeworks {
 
@@ -33,8 +39,12 @@ void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
     m_init_scene = std::move(scene);
 }
 
+static const auto one_second = std::chrono::seconds(1);
+
 void Engine::start0() {
     m_renderer->open_window();
+    int fc = 0;
+    auto start = std::chrono::steady_clock::now();
     while(m_running) {
         fire_event(EventType::Frame, nullptr); // No data for start-of-frame yet
         EventBuffer buff;
@@ -60,6 +70,17 @@ void Engine::start0() {
         m_renderer->render_poll();
         if(m_renderer->is_close_requested()) m_running = false;
         m_renderer->sync(60); // 60 FPS default
+        fc++;
+        auto cur_time = std::chrono::steady_clock::now();
+        auto dur = cur_time - start;
+        if(dur >= one_second) {
+            if(DISPLAY_FPS) {
+                auto dur_ms = std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
+                std::cout << "FPS: " << std::setprecision(4) << (fc*1000.0f/dur_ms) << std::endl;
+            }
+            start = cur_time;
+            fc = 0;
+        }
     }
     m_renderer->close_window();
 }
