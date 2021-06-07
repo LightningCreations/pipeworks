@@ -14,7 +14,10 @@ if(PIPEWORKS_BUILD_DEMO AND (NOT PIPEWORKS_BUILD_SDLAUDIOPLAYER OR NOT PIPEWORKS
   message(FATAL_ERROR "Building the demo requires the SDL2 renderer; please check your configuration!")
 endif()
 
-option(PIPEWORKS_MARCH_NATIVE "Build the pipeworks libraries with the -march=native flag" ON)
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-march=native" MARCH_NATIVE_SUPPORTED)
+
+option(PIPEWORKS_MARCH_NATIVE "Build the pipeworks libraries with the -march=native flag" MARCH_NATIVE_SUPPORTED)
 if(PIPEWORKS_MARCH_NATIVE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -march=native")
 endif()
