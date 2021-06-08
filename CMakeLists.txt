@@ -3,6 +3,19 @@ project(pipeworks VERSION 0.1.0 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 
+set(PIPEWORKS_USE_CXXLIB "" CACHE STRING "The C++ Standard library to use")
+
+include(CheckCXXCompilerFlag)
+
+if(PIPEWORKS_USE_CXXLIB)
+  CHECK_CXX_COMPILER_FLAG("-stdlib=${PIPEWORKS_USE_CXXLIB}" _HAS_STDLIB)
+  if(NOT _HAS_STDLIB)
+    message(FATAL_ERROR "Cannot use c++lib ${PIPEWORKS_USE_CXXLIB} with ${CMAKE_CXX_COMPILER}")
+  else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=${PIPEWORKS_USE_CXXLIB}")
+  endif()
+endif()
+
 find_package(Doxygen)
 option(PIPEWORKS_BUILD_DOCS "Build the Doxygen documentation for Pipeworks" DOXYGEN_FOUND)
 
@@ -14,7 +27,7 @@ if(PIPEWORKS_BUILD_DEMO AND (NOT PIPEWORKS_BUILD_SDLAUDIOPLAYER OR NOT PIPEWORKS
   message(FATAL_ERROR "Building the demo requires the SDL2 renderer; please check your configuration!")
 endif()
 
-include(CheckCXXCompilerFlag)
+
 CHECK_CXX_COMPILER_FLAG("-march=native" MARCH_NATIVE_SUPPORTED)
 
 option(PIPEWORKS_MARCH_NATIVE "Build the pipeworks libraries with the -march=native flag" MARCH_NATIVE_SUPPORTED)
