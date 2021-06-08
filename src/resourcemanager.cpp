@@ -9,6 +9,7 @@ ResourceManager::ResourceManager() {}
 
 ResourceManager::~ResourceManager() {
     for(const auto &[key, data] : m_loaded_imagedata) {
+        data->release();
         delete data;
     }
 }

@@ -2,7 +2,11 @@
 
 namespace pipeworks {
 
-ImageData::ImageData(const uint32_t width, const uint32_t height, const uint8_t *data): m_width(width), m_height(height), m_data(data) {}
+ImageData::ImageData(const uint32_t width, const uint32_t height, const uint8_t *data, const void(*deleter)(void*)): m_width(width), m_height(height), m_data(data), m_deleter(deleter) {}
+
+void ImageData::release() {
+    if(m_deleter) m_deleter((void*) m_data);
+}
 
 const uint32_t ImageData::width() const {
     return m_width;

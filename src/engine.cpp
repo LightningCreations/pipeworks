@@ -102,8 +102,7 @@ void Engine::load_resource(std::string resource) {
     // TODO: Support images that aren't 32bpp more efficiently
     int x, y, _n;
     uint8_t *data = stbi_load((std::string(path) + "/assets/" + resource).c_str(), &x, &y, &_n, 4);
-    g_resourcemanager.put_image_data(resource, new ImageData(x, y, data));
-    // FIXME: Resource leak: data is never freed (needs `stbi_free(data)`)
+    g_resourcemanager.put_image_data(resource, new ImageData(x, y, data, (const void(*)(void*)) stbi_image_free));
 
     delete[] path;
     m_active_load_threads--;
