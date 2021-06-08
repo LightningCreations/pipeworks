@@ -13,4 +13,4 @@ add_custom_command(TARGET fotc POST_BUILD
 )
 
 target_compile_features(fotc PUBLIC cxx_std_11)
-target_link_libraries(fotc pipeworks pipeworks-sdlaudioplayer pipeworks-sdlrenderer)
+target_link_libraries(fotc pipeworks pipeworks-defaultaudiomixer pipeworks-sdlaudioplayer pipeworks-sdlrenderer)

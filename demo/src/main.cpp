@@ -8,6 +8,7 @@
 #include "starfieldbackground.hpp"
 #include "ship.hpp"
 
+#include <defaultaudiomixer.hpp>
 #include <sdlaudioplayer.hpp>
 #include <sdlrenderer.hpp>
 
@@ -25,7 +26,8 @@ void update_camera(void *obj, void *data, EventType event_type, Engine &engine) 
 int main(int argc, char *argv[]) {
     SDLRenderer renderer;
     SDLAudioPlayer audioPlayer;
-    Engine engine{std::make_unique<SDLRenderer>(renderer), std::make_unique<SDLAudioPlayer>(audioPlayer)};
+    DefaultAudioMixer audioMixer;
+    Engine engine{std::make_unique<SDLRenderer>(renderer), std::make_unique<SDLAudioPlayer>(audioPlayer), std::make_unique<DefaultAudioMixer>(audioMixer)};
     Scene scene{};
 
     std::vector<std::string> ship_frames;

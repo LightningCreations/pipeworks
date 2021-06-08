@@ -19,12 +19,13 @@ endif()
 find_package(Doxygen)
 option(PIPEWORKS_BUILD_DOCS "Build the Doxygen documentation for Pipeworks" DOXYGEN_FOUND)
 
+option(PIPEWORKS_BUILD_DEFAULTAUDIOMIXER "Build the default audio mixing system for Pipeworks" ON)
 option(PIPEWORKS_BUILD_SDLAUDIOPLAYER "Build the SDL2-based audio playback engine for Pipeworks" ON)
 option(PIPEWORKS_BUILD_SDLRENDERER "Build the SDL2-based renderer for Pipeworks" ON)
 
 option(PIPEWORKS_BUILD_DEMO "Build the Pipeworks demo, Fire of the Clouds" ON)
-if(PIPEWORKS_BUILD_DEMO AND (NOT PIPEWORKS_BUILD_SDLAUDIOPLAYER OR NOT PIPEWORKS_BUILD_SDLRENDERER))
-  message(FATAL_ERROR "Building the demo requires the SDL2 renderer; please check your configuration!")
+if(PIPEWORKS_BUILD_DEMO AND (NOT PIPEWORKS_BUILD_DEFAULTAUDIOMIXER OR NOT PIPEWORKS_BUILD_SDLAUDIOPLAYER OR NOT PIPEWORKS_BUILD_SDLRENDERER))
+  message(FATAL_ERROR "Building the demo requires the SDL2 tools and the default audio mixer; please check your configuration!")
 endif()
 
 
@@ -71,6 +72,19 @@ target_compile_options(pipeworks PRIVATE
 )
 
 set_target_properties(pipeworks PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+if(PIPEWORKS_BUILD_DEFAULTAUDIOMIXER)
+  add_library(pipeworks-defaultaudiomixer src/defaultaudiomixer/defaultaudiomixer.cpp include/defaultaudiomixer/defaultaudiomixer.hpp)
+  target_include_directories(pipeworks-defaultaudiomixer
+    PUBLIC
+      $<INSTALL_INTERFACE:include/defaultaudiomixer>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/defaultaudiomixer>
+    PRIVATE
+      ${CMAKE_CURRENT_SOURCE_DIR}/src/defaultaudiomixer
+  )
+
+  set_target_properties(pipeworks-defaultaudiomixer PROPERTIES POSITION_INDEPENDENT_CODE ON)
+endif()
 
 if(PIPEWORKS_BUILD_SDLRENDERER OR PIPEWORKS_BUILD_SDLAUDIOPLAYER) # or any other SDL components
   if(WIN32)

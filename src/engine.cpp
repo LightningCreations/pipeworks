@@ -21,7 +21,7 @@ void engine_audio_callback_wrap(void *userdata, float *data, int len) {
     ((Engine*) userdata)->audio_callback(data, len);
 }
 
-Engine::Engine(std::unique_ptr<Renderer> renderer, std::unique_ptr<AudioPlayer> audio_player): m_audio_player(std::move(audio_player)), m_renderer(std::move(renderer)), m_active_load_threads(0), m_eventQueue{64*sizeof(EventBuffer)} {
+Engine::Engine(std::unique_ptr<Renderer> renderer, std::unique_ptr<AudioPlayer> audio_player, std::unique_ptr<AudioMixer> audio_mixer): m_audio_mixer(std::move(audio_mixer)), m_audio_player(std::move(audio_player)), m_renderer(std::move(renderer)), m_active_load_threads(0), m_eventQueue{64*sizeof(EventBuffer)} {
     m_renderer->set_active_scene_list(&m_active_scenes);
     m_renderer->set_active_engine(this);
     m_renderer->set_width(1280);
