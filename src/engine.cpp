@@ -12,7 +12,13 @@
 
 namespace pipeworks {
 
-struct EventBuffer{
+// Source: https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c
+static inline constexpr bool ends_with(std::string const &value, std::string const &ending) {
+    if (ending.size() > value.size()) return false;
+    return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
+}
+
+struct EventBuffer {
     EventType type;
     void* udata;
 };
@@ -41,7 +47,15 @@ void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
 
 static const auto one_second = std::chrono::seconds(1);
 
+static char *exe_path = nullptr;
+
 void Engine::start0() {
+    if(!exe_path) {
+        int pathlen, dirnamelen;
+        exe_path = new char[pathlen = wai_getExecutablePath(nullptr, 0, nullptr)];
+        wai_getExecutablePath(exe_path, pathlen, &dirnamelen);
+        exe_path[dirnamelen] = '\0';
+    }
     m_renderer->open_window();
     int fc = 0;
     auto start = std::chrono::steady_clock::now();
@@ -83,29 +97,32 @@ void Engine::start0() {
         }
     }
     m_renderer->close_window();
+    delete[] exe_path;
+    exe_path = nullptr;
 }
 
 void Engine::load_resource(std::string resource) {
     // TODO: Not all resources are images.
     // ... but right now, they are.
-    if(g_resourcemanager.is_image_data_loaded(resource)) {
+    if(ends_with(resource, ".png")) {
+        if(g_resourcemanager.is_image_data_loaded(resource)) {
+            m_active_load_threads--;
+            return;
+        }
+
+        // TODO: Support additional loading locations (currently only supports "assets/<resource>")
+        // TODO: Support images that aren't 32bpp more efficiently
+        int x, y, _n;
+        uint8_t *data = stbi_load((std::string(exe_path) + "/assets/" + resource).c_str(), &x, &y, &_n, 4);
+        g_resourcemanager.put_image_data(resource, new ImageData(x, y, data, (const void(*)(void*)) stbi_image_free));
+
         m_active_load_threads--;
-        return;
+    } else if(ends_with(resource, ".flac")) {
+        if(g_resourcemanager.is_audio_data_loaded(resource)) { 
+            m_active_load_threads--;
+            return;
+        }
     }
-
-    // TODO: Support additional loading locations (currently only supports "assets/<resource>")
-    // TODO: Cache executable path
-    int pathlen, dirnamelen;
-    char *path = new char[pathlen = wai_getExecutablePath(nullptr, 0, nullptr)];
-    wai_getExecutablePath(path, pathlen, &dirnamelen);
-    path[dirnamelen] = '\0';
-    // TODO: Support images that aren't 32bpp more efficiently
-    int x, y, _n;
-    uint8_t *data = stbi_load((std::string(path) + "/assets/" + resource).c_str(), &x, &y, &_n, 4);
-    g_resourcemanager.put_image_data(resource, new ImageData(x, y, data, (const void(*)(void*)) stbi_image_free));
-
-    delete[] path;
-    m_active_load_threads--;
 }
 
 void Engine::start() {
