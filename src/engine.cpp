@@ -122,6 +122,11 @@ void Engine::load_resource(std::string resource) {
             m_active_load_threads--;
             return;
         }
+        g_resourcemanager.put_audio_data(resource, new AudioData());
+
+        m_active_load_threads--;
+    } else {
+        std::abort();
     }
 }
 

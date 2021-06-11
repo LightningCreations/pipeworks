@@ -39,6 +39,7 @@ endif()
 add_subdirectory(3rdparty/ring-buffer)
 
 add_library(pipeworks
+  src/audiomixer.cpp include/audiomixer.hpp
   src/audioplayer.cpp include/audioplayer.hpp
   src/engine.cpp include/engine.hpp
   src/event.cpp include/event.hpp
