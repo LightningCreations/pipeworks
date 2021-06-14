@@ -13,7 +13,8 @@
 namespace pipeworks {
 
 // Source: https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c
-static inline constexpr bool ends_with(std::string const &value, std::string const &ending) {
+// This would be constexpr, but GCC doesn't support it
+static inline bool ends_with(std::string const &value, std::string const &ending) {
     if (ending.size() > value.size()) return false;
     return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
 }
