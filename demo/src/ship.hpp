@@ -7,6 +7,7 @@
 #include <engine.hpp>
 #include <scene.hpp>
 #include <objects/emitter.hpp>
+#include <objects/soundeffect.hpp>
 #include <objects/sprite.hpp>
 
 #include "blaster.hpp"
@@ -22,6 +23,7 @@ class Ship : public Sprite {
     int16_t m_rot;
     Emitter m_rear_thruster;
     Blaster m_blaster;
+    SoundEffect m_blaster_sfx;
     Ship(const Ship&) = delete;
     Ship& operator=(const Ship&) = delete;
     Ship(Ship&&) = delete;

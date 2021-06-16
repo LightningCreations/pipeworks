@@ -137,14 +137,9 @@ class Engine {
     /// The Input Manager allows for synchronous handling of Key Inputs
     InputManager& input_manager();
 
-    void set_bgm(std::string resource);
-    void set_bgm(AudioData *data);
-
-    void add_sfx(std::string resource);
-    void add_sfx(AudioData *data);
-
-    void play_sfx(std::string resource);
-    void play_sfx(AudioData *data);
+    void set_bgm(const AudioData *data);
+    void add_sfx(const AudioData *data);
+    void play_sfx(const AudioData *data);
 };
 
 }

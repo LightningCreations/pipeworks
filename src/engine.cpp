@@ -25,7 +25,7 @@ struct EventBuffer {
 };
 
 void engine_audio_callback_wrap(void *userdata, float *data, int len) {
-    ((Engine*) userdata)->audio_callback(data, len);
+    ((Engine*) userdata)->audio_callback(data, len/4); // Because SDL. I'll fix the SDL side later.
 }
 
 Engine::Engine(std::unique_ptr<Renderer> renderer, std::unique_ptr<AudioPlayer> audio_player, std::unique_ptr<AudioMixer> audio_mixer): m_audio_mixer(std::move(audio_mixer)), m_audio_player(std::move(audio_player)), m_renderer(std::move(renderer)), m_active_load_threads(0), m_eventQueue{64*sizeof(EventBuffer)} {
@@ -37,9 +37,7 @@ Engine::Engine(std::unique_ptr<Renderer> renderer, std::unique_ptr<AudioPlayer> 
 }
 
 void Engine::audio_callback(float *data, int len) {
-    for(int i = 0; i < len/4; i++) {
-        data[i] = 0;
-    }
+    m_audio_mixer->fill_buffer(data, len);
 }
 
 void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
@@ -202,6 +200,14 @@ InputManager& Engine::input_manager(){
         this->m_inputMan.emplace(*this,pipeworks::_token{});
     }
     return *this->m_inputMan;
+}
+
+void Engine::add_sfx(const AudioData *data) {
+    m_audio_mixer->add_sfx(data);
+}
+
+void Engine::play_sfx(const AudioData *data) {
+    m_audio_mixer->play_sfx(data);
 }
 
 }

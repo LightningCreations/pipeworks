@@ -88,7 +88,7 @@ Ship::Ship(float x, float y, float z, std::string name, Engine &engine, Scene &s
         ParticleParameter{  0.4f, 0.05f,  -1.0f,  0.02f, -0.16f, 0},
         ParticleParameter{  0.1f, 0.01f,  -0.3f, 0.005f, -0.04f, 0},
         32
-    ), m_blaster(x, y, z) {
+    ), m_blaster(x, y, z), m_blaster_sfx(engine, "blaster.flac") {
     if(is_player) {
 	engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &mps_wrap, this)));
         engine.register_event(std::make_unique<Event>(Event(EventType::KeyDown, &fire_wrap, this)));
@@ -109,6 +109,7 @@ float Ship::world_y() {
 
 void Ship::fire() {
     m_blaster.fire();
+    m_blaster_sfx.play();
 }
 
 }
