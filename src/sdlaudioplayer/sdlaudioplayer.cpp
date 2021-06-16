@@ -42,6 +42,7 @@ void SDLAudioPlayer::set_callback(void(*callback)(void*,float*,int), void *userd
     format.channels = 2;
     format.samples = 1024;
     format.callback = (SDL_AudioCallback) callback;
+    format.userdata = userdata;
     if(SDL_OpenAudio(&format, nullptr) != 0) {
         throw "Couldn't open audio device";
     }

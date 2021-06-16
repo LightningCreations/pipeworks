@@ -6,13 +6,15 @@ DefaultAudioMixer::DefaultAudioMixer() {
 }
 
 void DefaultAudioMixer::fill_buffer(float *buf, int len) {
-    for(int i = 0; i < len; i++) {
-        buf[i] = 0;
+    for(int i = 0; i < len/2; i++) {
+        buf[i*2] = 0;
+        buf[i*2+1] = 0;
         {
             std::unique_lock<std::mutex> sfx_lock{m_sfx_mutex};
             for(int i = 0; i < SFX_COUNT; i++) {
                 if(sfx[i]) {
-                    buf[i] += 0.1f; // Temp
+                    buf[i*2] += 0.1f; // Temp
+                    buf[i*2+1] += 0.1f;
                     sfx_pos[i]++;
                     if(sfx_pos[i] > 48000) {
                         sfx[i] = nullptr;
