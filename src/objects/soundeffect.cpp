@@ -31,6 +31,8 @@ void SoundEffect::play() {
     m_engine.play_sfx(m_data);
 }
 
-void SoundEffect::render(Renderer &renderer) {}
+void SoundEffect::render(Renderer &renderer) {
+    (void) renderer;
+}
 
 }
