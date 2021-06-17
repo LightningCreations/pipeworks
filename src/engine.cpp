@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <iostream>
 
+#include <dr_flac.h>
 #include <stb_image.h>
 #include <whereami.h>
 
@@ -121,7 +122,12 @@ void Engine::load_resource(std::string resource) {
             m_active_load_threads--;
             return;
         }
-        g_resourcemanager.put_audio_data(resource, new AudioData());
+        unsigned int channels, sample_rate;
+        drflac_uint64 frame_count;
+        float *data = drflac_open_file_and_read_pcm_frames_f32((std::string(exe_path) + "/assets/" + resource).c_str(),
+                        &channels, &sample_rate, &frame_count, nullptr);
+        drflac_free(data, nullptr);
+        g_resourcemanager.put_audio_data(resource, new AudioData(std::vector<float>()));
 
         m_active_load_threads--;
     } else {

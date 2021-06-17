@@ -54,6 +54,7 @@ add_library(pipeworks
   src/objects/soundeffect.cpp include/objects/soundeffect.hpp
   src/objects/sprite.cpp include/objects/sprite.hpp
 
+  src/dr_flac.c 3rdparty/dr_libs/dr_flac.h
   src/stb_image.c 3rdparty/stb/stb_image.h
   src/whereami.c src/whereami.h
   src/input.cpp include/input.hpp
@@ -65,6 +66,7 @@ target_include_directories(pipeworks
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/dr_libs
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb
 )
 target_compile_features(pipeworks PUBLIC cxx_std_20)
