@@ -33,6 +33,7 @@ void DefaultAudioMixer::add_sfx(const AudioData *data) {
 }
 
 void DefaultAudioMixer::play_sfx(const AudioData *data) {
+    if(!data) return;
     if(data->data().size() == 0) return; // If there is no sound, don't play
     std::unique_lock<std::mutex> sfx_lock{m_sfx_mutex};
     for(int i = 0; i < SFX_COUNT; i++) {
