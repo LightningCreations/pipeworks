@@ -97,6 +97,7 @@ Ship::Ship(float x, float y, float z, std::string name, Engine &engine, Scene &s
     }
     scene.add_object(&m_rear_thruster);
     scene.add_object(&m_blaster);
+    scene.add_object(&m_blaster_sfx);
 }
 
 float Ship::world_x() {

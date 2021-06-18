@@ -38,7 +38,7 @@ Engine::Engine(std::unique_ptr<Renderer> renderer, std::unique_ptr<AudioPlayer> 
 }
 
 void Engine::audio_callback(float *data, int len) {
-    m_audio_mixer->fill_buffer(data, len);
+    if(m_audio_mixer) m_audio_mixer->fill_buffer(data, len);
 }
 
 void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
@@ -126,8 +126,23 @@ void Engine::load_resource(std::string resource) {
         drflac_uint64 frame_count;
         float *data = drflac_open_file_and_read_pcm_frames_f32((std::string(exe_path) + "/assets/" + resource).c_str(),
                         &channels, &sample_rate, &frame_count, nullptr);
+
+        std::vector<float> result_data;
+        // For now, we shall ignore sample_rate
+        (void) sample_rate;
+        // Because it will be painful to convert that.
+        for(uint64_t i = 0; i < frame_count; i++) {
+            if(channels == 1) {
+                result_data.push_back(data[i]);
+                result_data.push_back(data[i]);
+            } else { // Assuming nobody is giving us 4+ channel FLACs right now
+                result_data.push_back(data[i*2]);
+                result_data.push_back(data[i*2+1]);
+            }
+        }
+
         drflac_free(data, nullptr);
-        g_resourcemanager.put_audio_data(resource, new AudioData(std::vector<float>()));
+        g_resourcemanager.put_audio_data(resource, new AudioData(result_data));
 
         m_active_load_threads--;
     } else {

@@ -11,7 +11,7 @@ class AudioData {
   public:
     AudioData(std::vector<float> data): m_data(data) {}
 
-    const std::vector<float>& data() { return m_data; }
+    constexpr const std::vector<float>& data() const { return m_data; }
 };
 
 }
