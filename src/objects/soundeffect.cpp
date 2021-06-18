@@ -10,7 +10,7 @@ SoundEffect::SoundEffect(Engine &engine, const AudioData &data): GameObject(-INF
 }
 
 SoundEffect::SoundEffect(Engine &engine, std::string resource): GameObject(-INFINITY, -INFINITY, -INFINITY),
-    m_engine(engine), m_resources{resource}, m_loaded(false) {
+    m_engine(engine), m_data(nullptr), m_resources{resource}, m_loaded(false) {
 }
 
 void SoundEffect::finished_loading() {
