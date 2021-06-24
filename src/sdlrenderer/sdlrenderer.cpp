@@ -190,6 +190,7 @@ void SDLRenderer::fill_rect(float x, float y, float width, float height, uint8_t
 
 void SDLRenderer::clear() {
     for(uint32_t i = 0; i < m_width*m_height; ++i) {
+        m_pixels[i*4  ] = 0;
         m_pixels[i*4+1] = 0;
         m_pixels[i*4+2] = 0;
         m_pixels[i*4+3] = 0;

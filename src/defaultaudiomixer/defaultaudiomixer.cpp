@@ -12,11 +12,11 @@ void DefaultAudioMixer::fill_buffer(float *buf, int len) {
             std::unique_lock<std::mutex> sfx_lock{m_sfx_mutex};
             for(int j = 0; j < SFX_COUNT; j++) {
                 if(sfx[j]) {
-                    std::vector<float> data = sfx[j]->data();
+                    const std::vector<float> &data = sfx[j]->data();
                     buf[i*2] += data[sfx_pos[j]*2];
                     buf[i*2+1] += data[sfx_pos[j]*2+1];
                     sfx_pos[j]++;
-                    if(sfx_pos[j] > (data.size()/2)) {
+                    if(sfx_pos[j] >= (data.size()/2)) {
                         sfx[j] = nullptr;
                     }
                 }
