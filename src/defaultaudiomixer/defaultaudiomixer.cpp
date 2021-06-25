@@ -2,12 +2,24 @@
 
 namespace pipeworks {
 
-DefaultAudioMixer::DefaultAudioMixer(): m_sfx{}, m_sfx_pos{} {}
+DefaultAudioMixer::DefaultAudioMixer(): m_sfx{}, m_sfx_pos{}, m_bgm{}, m_bgm_pos{} {}
 
 void DefaultAudioMixer::fill_buffer(float *buf, int len) {
     for(int i = 0; i < len/2; i++) {
-        buf[i*2] = 0;
-        buf[i*2+1] = 0;
+        {
+            std::unique_lock<std::mutex> bgm_lock{m_bgm_mutex};
+            if(m_bgm) {
+                buf[i*2] = m_bgm->data()[m_bgm_pos*2];
+                buf[i*2+1] = m_bgm->data()[m_bgm_pos*2+1];
+                m_bgm_pos++;
+                if(m_bgm_pos >= m_bgm_loop_end) {
+                    m_bgm_pos = m_bgm_loop_start;
+                }
+            } else {
+                buf[i*2] = 0;
+                buf[i*2+1] = 0;
+            }
+        }
         {
             std::unique_lock<std::mutex> sfx_lock{m_sfx_mutex};
             for(int j = 0; j < SFX_COUNT; j++) {
@@ -26,9 +38,11 @@ void DefaultAudioMixer::fill_buffer(float *buf, int len) {
 }
 
 void DefaultAudioMixer::set_bgm(const AudioData *data, uint64_t loop_start, uint64_t loop_end) {
+    std::unique_lock<std::mutex> bgm_lock{m_bgm_mutex};
     m_bgm = data;
     m_bgm_loop_start = loop_start;
     m_bgm_loop_end = loop_end;
+    m_bgm_pos = 0;
 }
 
 void DefaultAudioMixer::add_sfx(const AudioData *data) {

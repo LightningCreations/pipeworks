@@ -18,6 +18,7 @@ class DefaultAudioMixer : public AudioMixer {
     const AudioData *m_bgm;
     uint64_t m_sfx_pos[SFX_COUNT];
     const AudioData *m_sfx[SFX_COUNT];
+    std::mutex m_bgm_mutex;
     std::mutex m_sfx_mutex;
   public:
     DefaultAudioMixer();

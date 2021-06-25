@@ -3,6 +3,7 @@
 #include <engine.hpp>
 #include <renderer.hpp>
 #include <scene.hpp>
+#include <objects/bgm.hpp>
 #include <objects/sprite.hpp>
 
 #include "starfieldbackground.hpp"
@@ -35,6 +36,9 @@ int main(int argc, char *argv[]) {
     Ship player_ship(0, 0, 1, "ship", engine, scene, true);
     player_shipp = &player_ship;
     scene.add_object(&player_ship);
+
+    BGM lvl1(engine, "lvl1.flac", 0, UINT64_MAX);
+    scene.add_object(&lvl1);
 
     engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &update_camera, &scene)));
 

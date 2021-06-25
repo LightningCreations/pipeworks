@@ -223,6 +223,10 @@ InputManager& Engine::input_manager(){
     return *this->m_inputMan;
 }
 
+void Engine::set_bgm(const AudioData *data, uint64_t loop_start, uint64_t loop_end) {
+    m_audio_mixer->set_bgm(data, loop_start, loop_end);
+}
+
 void Engine::add_sfx(const AudioData *data) {
     m_audio_mixer->add_sfx(data);
 }
