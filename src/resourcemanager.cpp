@@ -12,6 +12,9 @@ ResourceManager::~ResourceManager() {
         data->release();
         delete data;
     }
+    for(const auto &[key, data] : m_loaded_audiodata) {
+        delete data;
+    }
 }
 
 AudioData &ResourceManager::audio_data(const std::string &name) {
