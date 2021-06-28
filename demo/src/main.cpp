@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     player_shipp = &player_ship;
     scene.add_object(&player_ship);
 
-    BGM lvl1(engine, "lvl1.flac", 0, UINT64_MAX);
+    BGM lvl1(engine, "lvl1.flac", 460800, 2304000);
     scene.add_object(&lvl1);
 
     engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &update_camera, &scene)));
