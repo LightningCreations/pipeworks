@@ -38,6 +38,11 @@ endif()
 
 add_subdirectory(3rdparty/ring-buffer)
 
+if(NOT WIN32)
+  find_package(TBB REQUIRED)
+  set(PIPEWORKS_LINK_LIBTBB TBB::tbb)
+endif()
+
 add_library(pipeworks
   src/audiomixer.cpp include/audiomixer.hpp
   src/audioplayer.cpp include/audioplayer.hpp
@@ -62,7 +67,7 @@ add_library(pipeworks
 
   src/collision.cpp include/collision.hpp
 )
-target_link_libraries(pipeworks PUBLIC ring_buffer)
+target_link_libraries(pipeworks PUBLIC ring_buffer ${PIPEWORKS_LINK_LIBTBB})
 target_include_directories(pipeworks
   PUBLIC
     $<INSTALL_INTERFACE:include>
