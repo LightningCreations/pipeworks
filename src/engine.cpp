@@ -41,6 +41,10 @@ void Engine::audio_callback(float *data, int len) {
     if(m_audio_mixer) m_audio_mixer->fill_buffer(data, len);
 }
 
+Engine::~Engine() {
+    m_audio_player = nullptr; // Destruct audio player so audio_callback doesn't UAF
+}
+
 void Engine::set_init_scene(std::unique_ptr<Scene> scene) {
     m_init_scene = std::move(scene);
 }

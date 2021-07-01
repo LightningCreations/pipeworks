@@ -47,6 +47,7 @@ void SDLAudioPlayer::set_callback(void(*callback)(void*,float*,int), void *userd
         throw "Couldn't open audio device";
     }
     SDL_PauseAudio(0);
+    m_callback_set = true;
 }
 
 void SDLAudioPlayer::tick() {
