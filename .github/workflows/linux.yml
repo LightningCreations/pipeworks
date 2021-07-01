@@ -34,7 +34,7 @@ jobs:
       with:
         submodules: true 
     - name: Install packages
-      run: sudo apt-get update && sudo apt-get install ninja-build libsdl2-dev libtbb-dev
+      run: sudo apt-get update && sudo apt-get install ninja-build libsdl2-dev libtbb-dev gcc-10
     - name: GCC Build
       uses: LightningCreations/action-cmake-build@v1.2
       with:
