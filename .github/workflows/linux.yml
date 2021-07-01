@@ -34,12 +34,12 @@ jobs:
       with:
         submodules: true 
     - name: Install packages
-      run: sudo apt-get update && sudo apt-get install ninja-build libsdl2-dev libtbb-dev gcc-10
+      run: sudo apt-get update && sudo apt-get install ninja-build libsdl2-dev libtbb-dev
     - name: GCC Build
       uses: LightningCreations/action-cmake-build@v1.2
       with:
-        cc: gcc
-        cxx: g++
+        cc: gcc-10
+        cxx: g++-10
         update-submodules: true
         parallel: 8
         build-dir: ${{github.workspace}}/build-gcc 
