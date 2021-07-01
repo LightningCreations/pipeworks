@@ -59,6 +59,8 @@ add_library(pipeworks
   src/stb_image.c 3rdparty/stb/stb_image.h
   src/whereami.c src/whereami.h
   src/input.cpp include/input.hpp
+
+  src/collision.cpp include/collision.hpp
 )
 target_link_libraries(pipeworks PUBLIC ring_buffer)
 target_include_directories(pipeworks
