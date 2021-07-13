@@ -44,7 +44,6 @@ namespace pipeworks{
         T x;
         T y;
 
-        constexpr PointCollision()noexcept=default;
 
         friend constexpr auto operator==(const PointCollision& p1,const PointCollision& p2)  noexcept(noexcept(p1.x==p2.x)) -> decltype(p1.x==p2.x){
             return p1.x==p2.x&&p1.y==p2.y;
@@ -68,6 +67,42 @@ namespace pipeworks{
             });
         }
 
+    template<typename T> struct LineSegmentCollision{
+        T x1;
+        T x2;
+        T y1;
+        T y2;
+
+
+        template<typename U> 
+            friend constexpr bool collide_with(const LineSegmentCollision<T>& l1,const PointCollision<T>& p) {
+                using std::abs;
+                return std::min(l1.x1,l1.x2)<=p.x&&std::min(l1.y1,l1.y2)<=p.y&&p.x<std::max(l1.x1,l1.x2)&&p.y<std::max(l1.y1,l1.y2)
+                    &&(abs(((l1.y1-p.y)/(l1.x1-p.x))-((l1.y1-l1.y2)/(l1.x1-l1.x1))<std::numeric_limits<T>::epislon()));
+            }
+
+    };
+
+    template<typename T> struct CircleCollision{
+        T x;
+        T y;
+        T r;
+
+        template<typename U> friend constexpr auto collide_with(const CircleCollision<T>& c,const PointCollision<U>& p)
+            noexcept(noexcept(((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y))<c.r)) -> decltype(((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y))<c.r){
+                return ((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y))<c.r;
+            }
+
+        template<typename U> friend constexpr auto collide_with(const CircleCollision<T>& c,const LineSegmentCollision<U>& l){
+            auto adotb = l.x1*c.x+l.y1*c.y;
+            auto adota = l.x1*l.x1+l.y1*l.y1;
+            auto x = (adotb/adota)*l.x1;
+            auto y = (adotb/adota)*l.y1;
+
+            PointCollision p{x,y};
+            return collide_with(c,p)&&collide_with(l,p);
+        }
+    };
 }
 
 #endif /* PW_COLLISION_HPP_2021_07_01_11_37_57 */
