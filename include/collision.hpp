@@ -89,8 +89,8 @@ namespace pipeworks{
         T r;
 
         template<typename U> friend constexpr auto collide_with(const CircleCollision<T>& c,const PointCollision<U>& p)
-            noexcept(noexcept(((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y))<c.r)) -> decltype(((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y))<c.r){
-                return ((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y))<c.r;
+            noexcept(noexcept(((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y))<c.r*c.r)) -> decltype(((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y))<c.r*c.r){
+                return ((c.x-p.x)*(c.x-p.x)+(c.y-p.y)*(c.y-p.y)-c.r*c.r)<std::numeric_limits<T>::epsilon();
             }
 
         template<typename U> friend constexpr auto collide_with(const CircleCollision<T>& c,const LineSegmentCollision<U>& l){
