@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(pipeworks VERSION 0.1.0 LANGUAGES C CXX)
+set(CMAKE_CXX_STANDARD 20)
 
 include(GNUInstallDirs)
 
@@ -77,7 +78,6 @@ target_include_directories(pipeworks
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/dr_libs
     ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/stb
 )
-target_compile_features(pipeworks PUBLIC cxx_std_20)
 target_compile_options(pipeworks PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
   $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wpedantic -pedantic -Werror>
