@@ -15,7 +15,7 @@ jobs:
         with:
           submodules: true
       - name: Install packages
-        run: brew install ninja sdl2
+        run: brew install ninja sdl2 tbb
       - name: Clang Build
         uses: LightningCreations/action-cmake-build@v1.2
         with:
