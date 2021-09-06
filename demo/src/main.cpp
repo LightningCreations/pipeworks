@@ -20,29 +20,32 @@ Ship *player_shipp;
 
 void update_camera(void *obj, void *data, EventType event_type, Engine &engine) {
     Scene &scene = *((Scene*) obj);
-    scene.set_camera_x(-player_shipp->world_x());
+    scene.set_camera_x(-player_shipp->world_x()-0.8f);
     scene.set_camera_y(-player_shipp->world_y());
 }
 
 int main(int argc, char *argv[]) {
     Engine engine{std::make_unique<SDLRenderer>(), std::make_unique<SDLAudioPlayer>(), std::make_unique<DefaultAudioMixer>()};
-    Scene scene{};
+    Scene level_scene{};
 
     std::vector<std::string> ship_frames;
 
     StarfieldBackground bg(100000, engine); // farthest back
-    scene.add_object(&bg);
+    level_scene.add_object(&bg);
 
-    Ship player_ship(0, 0, 1, "ship", engine, scene, true);
+    Ship enemy1(5, 0, 2, "ship", engine, level_scene, false);
+    level_scene.add_object(&enemy1);
+
+    Ship player_ship(0, 0, 1, "ship", engine, level_scene, true);
     player_shipp = &player_ship;
-    scene.add_object(&player_ship);
+    level_scene.add_object(&player_ship);
 
     BGM lvl1(engine, "lvl1.flac", 460800, 2304000);
-    scene.add_object(&lvl1);
+    level_scene.add_object(&lvl1);
 
-    engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &update_camera, &scene)));
+    engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &update_camera, &level_scene)));
 
-    engine.set_init_scene(std::make_unique<Scene>(scene));
+    engine.set_init_scene(std::make_unique<Scene>(level_scene));
 
     engine.start();
     engine.join(); // Wait for stop

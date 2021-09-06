@@ -9,6 +9,10 @@ namespace fotc {
 
 static const float DEG_TO_RAD = 3.1415926536f / 180.0f;
 
+static void mes_wrap(void *obj, void *data, EventType event_type, Engine &engine) {
+    ((Ship*) obj)->move_enemy_ship(data, event_type, engine);
+}
+
 static void mps_wrap(void *obj, void *data, EventType event_type, Engine &engine) {
     ((Ship*) obj)->move_player_ship(data, event_type, engine);
 }
@@ -22,6 +26,9 @@ static void fire_wrap(void *obj, void *data, EventType event_type, Engine &engin
 
 static inline float maxf(float a, float b) {
     return (a > b) ? a : b;
+}
+
+void Ship::move_enemy_ship(void *data, EventType event_type, Engine &engine) {
 }
 
 void Ship::move_player_ship(void *data, EventType event_type, Engine &engine) {
@@ -80,20 +87,28 @@ static std::vector<std::string> get_frames_from_name(std::string name) {
 
 Ship::Ship(float x, float y, float z, std::string name, Engine &engine, Scene &scene, bool is_player):
     Sprite(x, y, 1, 0.4f, 0.4f, get_frames_from_name(name)), m_vx(0), m_vy(0), m_rot(90),
-    m_rear_thruster(
-        x-0.14f, y, z, 0.2f,
-        ParticleParameter{-0.30f, 0.10f,      0,      0,      0, 0},
-        ParticleParameter{     0, 0.02f,      0,      0,      0, 0},
-        ParticleParameter{  0.8f,  0.1f,  -2.0f,  0.04f, -0.32f, 0},
-        ParticleParameter{  0.4f, 0.05f,  -1.0f,  0.02f, -0.16f, 0},
-        ParticleParameter{  0.1f, 0.01f,  -0.3f, 0.005f, -0.04f, 0},
-        32
-    ), m_blaster(x, y, z), m_blaster_sfx(engine, "blaster.flac") {
+    m_blaster(x, y, z), m_blaster_sfx(engine, "blaster.flac") {
     if(is_player) {
 	engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &mps_wrap, this)));
         engine.register_event(std::make_unique<Event>(Event(EventType::KeyDown, &fire_wrap, this)));
+        m_rear_thruster = Emitter(x-0.14f, y, z, 0.2f,
+            ParticleParameter{-0.30f, 0.10f,      0,      0,      0, 0},
+            ParticleParameter{     0, 0.02f,      0,      0,      0, 0},
+            ParticleParameter{  0.8f,  0.1f,  -2.0f,  0.04f, -0.32f, 0},
+            ParticleParameter{  0.4f, 0.05f,  -1.0f,  0.02f, -0.16f, 0},
+            ParticleParameter{  0.1f, 0.01f,  -0.3f, 0.005f, -0.04f, 0},
+            32
+        );
     } else {
-       // TODO
+        engine.register_event(std::make_unique<Event>(Event(EventType::Frame, &mes_wrap, this)));
+        m_rear_thruster = Emitter(x+0.14f, y, z, 0.2f,
+            ParticleParameter{0.30f, 0.10f,      0,      0,      0, 0},
+            ParticleParameter{    0, 0.02f,      0,      0,      0, 0},
+            ParticleParameter{-0.8f,  0.1f,  -2.0f,  0.04f, -0.32f, 0},
+            ParticleParameter{-0.4f, 0.05f,  -1.0f,  0.02f, -0.16f, 0},
+            ParticleParameter{-0.1f, 0.01f,  -0.3f, 0.005f, -0.04f, 0},
+            32
+        );
     }
     scene.add_object(&m_rear_thruster);
     scene.add_object(&m_blaster);
